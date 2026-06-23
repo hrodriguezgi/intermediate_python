@@ -1,0 +1,5 @@
+INFO Application started
+WARNING Missing optional configuration
+INFO Loading course modules
+ERROR Failed to export notebook
+INFO Retry completed
