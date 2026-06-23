@@ -117,6 +117,75 @@ for label, value in examples:
     print(f"{label:<12} -> {bool(value)}")
 
 # %% [markdown]
+# ## `None` vs Empty Containers (Gotcha importante)
+#
+# Un error común es confundir `None` con contenedores vacíos como `[]` o `{}`.
+# Ambos son "falsy", pero tienen significados muy diferentes en la lógica de datos.
+#
+# En pipelines reales:
+# - `None` típicamente significa "no fue asignado" o "no existe"
+# - `[]` significa "existe, pero no tiene elementos"
+# - Esta diferencia importa para validación y configuración
+
+# %%
+def process_data(values):
+    """El problema: if values captura tanto [] como None"""
+    if values:
+        return sum(values)
+    return 0  # ¿Es 0 lo correcto para [] Y None?
+
+# Sin distinguir, pierdes información valiosa:
+print("Empty list result:", process_data([]))      # Retorna 0
+print("None result:", process_data(None))          # También retorna 0
+print("¿Cómo diferencias si fue None o []?")
+
+# %% [markdown]
+# La solución: verifica explícitamente con `is None`
+
+# %%
+def process_data_correct(values):
+    """Distingue entre None y contenedor vacío"""
+    if values is None:
+        raise ValueError("values is required, got None")
+    if not values:
+        return 0  # Ahora sabemos que es []
+    return sum(values)
+
+# Ahora puedes manejar cada caso:
+print("Empty list with check:", process_data_correct([]))
+try:
+    process_data_correct(None)
+except ValueError as e:
+    print(f"Caught error: {e}")
+
+# %% [markdown]
+# Escenario real en pipelines de datos:
+# Configuración donde `None` = "usar default" y `[]` = "deshabilitado"
+
+# %%
+def configure_tags(user_tags=None, default_tags=None):
+    """
+    None = usar defaults
+    [] = deshabilitado explícitamente
+    ["tag1", "tag2"] = usar estos
+    """
+    if user_tags is None:
+        # None significa "no fue configurado", usar defaults
+        tags = default_tags or ["python"]
+    elif len(user_tags) == 0:
+        # [] significa "deshabilitado explícitamente"
+        tags = []
+    else:
+        # Se especificaron etiquetas
+        tags = user_tags
+
+    return tags
+
+print("No config (None):", configure_tags())
+print("Explicit empty []:", configure_tags(user_tags=[]))
+print("Specific tags:", configure_tags(user_tags=["advanced", "data"]))
+
+# %% [markdown]
 # ## `None`
 #
 # `None` representa la ausencia intencional de un valor y aparece con frecuencia
