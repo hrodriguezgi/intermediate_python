@@ -23,6 +23,7 @@ intermediate_python/
 ├── tools/
 │   ├── build_notebooks.py
 │   └── validate_course.py
+├── module_00_python_refresh/
 ├── module_01_pythonic_foundations/
 ├── module_02_control_flow_and_comprehensions/
 ├── module_03_functions_and_functional_programming/
@@ -49,6 +50,7 @@ uv sync --group dev
 ```bash
 uv run python tools/build_notebooks.py
 uv run python tools/validate_course.py
+uv run python -m module_00_python_refresh.01_data_types_and_variables
 uv run python -m module_01_pythonic_foundations.01_data_model_and_unpacking
 uv run python -m module_06_packages_and_sqlite.01_packages_imports_and_cli
 uv run ruff check .
