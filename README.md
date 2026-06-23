@@ -2,10 +2,14 @@
 
 Curso práctico de Python intermedio orientado a escribir código más expresivo, mantenible y útil para proyectos reales.
 
+Este curso enfatiza **patrones reales** que encontrarás en producción: manejo de datos desordenados, casos extremos, problemas de rendimiento, y cómo escribir código defensivo que sobreviva en el mundo real.
+
 ## Objetivos
 
 - Consolidar bases sólidas de Python más allá de la sintaxis inicial.
 - Practicar diseño de funciones, manejo de archivos, serialización, POO y SQLite.
+- Entender patrones reales: rendimiento, seguridad, manejo de errores, y datos desordenados.
+- Aprender de gotchas comunes en pipelines de datos, APIs, y procesamiento de archivos.
 - Tener una versión paralela de cada lección en script (`.py`) y notebook (`.ipynb`).
 - Resolver ejercicios por módulo con formato `README.md`, `starter.py` y `solution.py`.
 
@@ -45,6 +49,30 @@ intermediate_python/
 uv sync --group dev
 ```
 
+## Patrones Real-World Incluidos
+
+Este curso enfatiza situaciones que encontrarás en producción:
+
+- **Datos desordenados:** Archivos con diferentes encodings, CSVs con formatos variados, respuestas de APIs con tipos mixtos
+- **Rendimiento:** Elección de estructuras de datos por complejidad (list vs set para búsquedas), generators vs comprehensions para archivos grandes
+- **Errores defensivos:** Excepciones con contexto, validación de entrada, manejo seguro de conexiones
+- **Seguridad:** Consultas SQL parametrizadas, prevención de inyecciones, manejo de credenciales
+- **Concurrencia:** Transacciones, context managers, bloqueos de recursos
+- **Patrones reusables:** Decoradores prácticos, composición vs herencia, funciones puras
+
+## Últimas Mejoras
+
+Todas las mejoras recientes enfatizan **situaciones reales** que rompen código de estudiantes:
+- Gotchas de copias superficiales en colecciones anidadas
+- Operador walrus (`:=`) para validación en loops
+- Match statements para procesamiento de eventos
+- Generators para archivos de gigabytes
+- Encoding edge cases (BOM, latin-1)
+- Custom exceptions con contexto completo
+- Transactions y SQL injection en SQLite
+
+Ver [MODULE_IMPROVEMENTS.md](./MODULE_IMPROVEMENTS.md) para detalles de cada mejora.
+
 ## Utilidades
 
 ```bash
@@ -58,8 +86,14 @@ uv run ruff format .
 uv run flake8 .
 ```
 
+## Documentación Importante
+
+- **[CLAUDE.md](./CLAUDE.md)** — Guía completa de desarrollo: filosofía del curso, rol del instructor, patrones enseñados, y flujo de trabajo.
+- **[MODULE_IMPROVEMENTS.md](./MODULE_IMPROVEMENTS.md)** — Plan detallado de mejoras por módulo con ejemplos de código real-world, prioridades, y estrategia de implementación.
+
 ## Convenciones
 
 - Usa `Python 3.12` para evitar incompatibilidades con `match` y otras features modernas.
 - Prefiere imports absolutos dentro del paquete cuando una lección reutiliza código de otro archivo.
 - Ejecuta scripts de módulos y ejercicios desde la raíz del repo con `uv run python -m ...`.
+- Las lecciones enfatizan **mostrar el problema primero** antes de la solución, con escenarios reales y trade-offs explicados.
