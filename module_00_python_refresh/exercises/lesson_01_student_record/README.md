@@ -1,19 +1,33 @@
-# Exercise · Student Record
+# Exercise · Student Records
 
-Completa `starter.py` para construir un resumen básico de un estudiante a partir
-de valores simples de entrada.
+Completa `starter.py` para procesar una lista de registros de estudiantes,
+normalizando nombres y convirtiendo tipos de datos.
 
 ## Objetivos
 
-- Practicar tipos básicos y conversiones.
-- Construir una salida clara a partir de valores simples.
-- Usar condiciones simples con truthy y falsy.
+- Practicar iteración sobre listas de diccionarios.
+- Aplicar conversión de tipos (`int()` en este caso).
+- Usar métodos de strings: `.strip()`, `.title()`.
+- Construir y retornar una lista de diccionarios normalizados.
 
 ## Resultado esperado
 
-La función debe retornar una tupla con:
+La función debe retornar una lista de diccionarios con:
 
-- `name`
-- `age`
-- `is_adult`
-- `has_email`
+```python
+[
+    {
+        "name": "Ana Garcia",
+        "age": 19,
+        "email": "ana@example.com",
+        "track": "backend"
+    },
+    {
+        "name": "Luis Perez",
+        "age": 25,
+        "email": "luis@example.com",
+        "track": "data"
+    },
+    # ... más estudiantes
+]
+```

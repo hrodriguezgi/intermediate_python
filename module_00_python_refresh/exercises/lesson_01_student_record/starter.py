@@ -1,19 +1,14 @@
 from __future__ import annotations
 
 
-def process_enrollment_data(students: list[dict]) -> dict:
+def build_student_records(students: list[dict]) -> list[dict]:
     """
-    Process a list of student enrollment records.
+    Process a list of student data and build normalized records.
 
     Each student dict has: name, age, email, track.
     - Normalize names (strip, title case).
-    - Parse age as integer.
-    - Validate: age >= 13, email is not empty.
-    - Return a dict with:
-        - "valid_students": list of dicts with processed student data
-        - "rejected_students": list of dicts with name and reason
-        - "total_valid": count of valid enrollments
-        - "tracks": set of unique tracks from valid students
+    - Convert age from string to integer.
+    - Return a list of dicts with normalized student data.
     """
     pass
 
@@ -21,10 +16,8 @@ def process_enrollment_data(students: list[dict]) -> dict:
 if __name__ == "__main__":
     sample = [
         {"name": " ana garcia ", "age": "19", "email": "ana@example.com", "track": "backend"},
-        {"name": " luis perez ", "age": "25", "email": "", "track": "data"},
-        {"name": " sofia lopez ", "age": "12", "email": "sofia@example.com", "track": "backend"},
-        {"name": " carlos ", "age": "invalid", "email": "carlos@example.com", "track": "frontend"},
+        {"name": " luis perez ", "age": "25", "email": "luis@example.com", "track": "data"},
+        {"name": " sofia lopez ", "age": "21", "email": "sofia@example.com", "track": "backend"},
     ]
-    result = process_enrollment_data(sample)
+    result = build_student_records(sample)
     print(result)
-e
