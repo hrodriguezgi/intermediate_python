@@ -14,14 +14,14 @@ validación defensiva y datos desordenados.
   - Variables y reasignación
   - Conversión entre tipos
   - Truthy/falsy
-  - **NEW:** None vs Empty Containers (gotchas importantes en validación)
+  - None vs Empty Containers (gotchas importantes en validación)
 
 - **`02_core_data_structures.py`**
   - Listas, tuplas, diccionarios, conjuntos
   - Queue con `deque` y stack simples
   - Recorrido de estructuras
-  - **NEW:** Elegir la estructura correcta (performance matters)
-  - **NEW:** Los datos reales son desordenados (validación defensiva)
+  - Elegir la estructura correcta (performance matters)
+  - Los datos reales son desordenados (validación defensiva)
 
 ## Ejercicios
 
@@ -39,19 +39,19 @@ validación defensiva y datos desordenados.
 
 ### Supplementary Content (Lessons 03-04)
 
-- **`exercises/lesson_03_structure_performance/`** ⚡
+- **`exercises/lesson_03_structure_performance/`**
   - Deduplicación con list vs set en 100K items
   - Benchmark con `timeit`: ~14,500x speedup con set
   - Real scenario: ETL pipelines con datasets masivos
   - **Objetivo:** Entender implicaciones de rendimiento
 
-- **`exercises/lesson_04_defensive_data_handling/`** 🛡️
+- **`exercises/lesson_04_defensive_data_handling/`**
   - Funciones defensivas: `safe_parse_int()`, `safe_parse_bool()`
   - None vs empty containers en configuración
   - Parsing de CSV y APIs con tipos inconsistentes
   - **Objetivo:** Prepararse para datos reales desordenados
 
-## Conceptos Clave (Data Engineering Focus)
+## Conceptos Clave
 
 | Concepto | Lección | Ejercicio | Impacto |
 |----------|---------|-----------|--------|
@@ -59,11 +59,3 @@ validación defensiva y datos desordenados.
 | None vs Empty Containers | 01 | 04 | Evita bugs silenciosos |
 | Mixed-Type Handling | 02 | 04 | Crítico para APIs/CSVs |
 | Type Validation | 01 | 04 | Production-ready patterns |
-
-## Recomendación de Flujo
-
-1. **Comienza con:** Lessons 01-02 (tipos, estructuras básicas)
-2. **Luego:** Ejercicios 01-02 (habilidades básicas)
-3. **Explora:** Lesson 02 sections "Performance" y "Mixed Types"
-4. **Refuerza con:** Ejercicios 03-04 (conceptos avanzados)
-5. **Valida:** Todos los ejemplos corren sin errores en Python 3.12
