@@ -9,7 +9,30 @@ def build_inventory_summary(products: list[dict]) -> dict:
         - "categories": sorted list of unique categories
         - "by_category": dict mapping category to total stock in that category
     """
-    pass
+    total_products = len(products)
+    total_stock = 0
+    categories = set()
+    by_category = dict()
+
+    for product in products:
+        stock = product.get("stock", 0)
+        category = product.get("category", "sin categoria")
+
+        total_stock += stock  # Recomendada, porque me permite adicionar un valor por defecto
+
+        categories.add(category)
+
+        if category not in by_category:
+            by_category[category] = stock
+        else:
+            by_category[category] += stock
+
+    return {
+        "total_products": total_products,
+        "total_stock": total_stock,
+        "categories": sorted(categories),
+        "by_category": by_category,
+    }
 
 
 if __name__ == "__main__":

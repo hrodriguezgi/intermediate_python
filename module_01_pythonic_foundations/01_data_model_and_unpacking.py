@@ -32,7 +32,9 @@ print(metadata)
 
 # %%
 schedule = ["variables", "collections", "functions"]
+print("schedule", schedule)
 alias = schedule
+print("alias", alias)
 
 schedule.append("files")
 

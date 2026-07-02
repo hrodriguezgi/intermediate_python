@@ -8,7 +8,11 @@ def deduplicate_with_list(ids: list[int]) -> list[int]:
     This is the naive approach: check if each ID exists in the result list
     before adding it.
     """
-    pass
+    result = list()
+    for id in ids:
+        if id not in result:
+            result.append(id)
+    return result
 
 
 def deduplicate_with_set(ids: list[int]) -> list[int]:
@@ -17,7 +21,7 @@ def deduplicate_with_set(ids: list[int]) -> list[int]:
 
     This is the efficient approach: convert to set and back to list.
     """
-    pass
+    return list(set(ids))
 
 
 if __name__ == "__main__":

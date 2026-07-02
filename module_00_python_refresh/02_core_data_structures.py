@@ -29,7 +29,7 @@ print(unique_tracks)
 
 # %%
 topics.append("files")
-first_two_topics = topics[:2]
+first_two_topics = topics[:2] # slice
 
 print("updated topics:", topics)
 print("first two:", first_two_topics)
@@ -57,6 +57,12 @@ student["track"] = "platform"
 print(student["name"])
 print(student)
 
+student["track"] = "computer"
+print(student)
+
+student["new_key"] = "new_value"
+print(student)
+
 # %% [markdown]
 # ## Conjuntos
 #
@@ -64,10 +70,10 @@ print(student)
 
 # %%
 raw_tags = ["python", "basics", "python", "course", "basics"]
-unique_tags = set(raw_tags)
+unique_tags = list(set(raw_tags))
 
 print(sorted(unique_tags))
-print("sqlite" in unique_tags)
+print("python" in unique_tags)
 
 # %% [markdown]
 # ## Queue con `deque`

@@ -10,15 +10,12 @@ def build_student_records(students: list[dict]) -> list[dict]:
     - Convert age from string to integer.
     - Return a list of dicts with normalized student data.
     """
-    record = {}
-    new_students = []
+
     for student in students:
-        record["name"] = student["name"].strip().title()
-        record["age"] = int(student["age"])
-        record["email"] = student["email"]
-        record["track"] = student["track"]
-        new_students.append(record)
-    return new_students
+        student["name"] = student["name"].strip().title()
+        student["age"] = int(student["age"])
+
+    return students
 
 
 if __name__ == "__main__":

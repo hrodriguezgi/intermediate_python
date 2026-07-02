@@ -8,15 +8,16 @@
 # - Recordar cómo Python evalúa condiciones con truthy y falsy.
 
 # %%
-course_name = "Intermediate Python"
-module_number = 0
-duration_hours = 2.5
-is_intro_module = True
+course_name: str = "Intermediate Python"  # string
+module_number: int = 0  # integer 1_000_000
+duration_hours: float = 2.8  # float 2_345_678.9 -> 2345678.9
+is_intro_module: bool = True  # boolean
 
-print(type(course_name).__name__)
-print(type(module_number).__name__)
-print(type(duration_hours).__name__)
-print(type(is_intro_module).__name__)
+print(course_name, type(course_name).__name__)
+print(module_number, type(module_number).__name__)
+print(duration_hours, type(duration_hours).__name__)
+print(is_intro_module, type(is_intro_module).__name__)
+
 
 # %% [markdown]
 # ## Tipos numéricos
@@ -29,7 +30,7 @@ registered_students = 24
 average_score = 4.7
 
 print(registered_students + 6)
-print(round(average_score * 10, 1))
+print(round(average_score * 6, 3))
 
 # %% [markdown]
 # ## Booleanos
@@ -42,6 +43,7 @@ is_open = True
 has_pending_homework = False
 
 print(is_open and not has_pending_homework)
+print(not is_open or has_pending_homework)
 
 # %% [markdown]
 # ## Strings
@@ -52,6 +54,7 @@ print(is_open and not has_pending_homework)
 # %%
 student_name = "  ana maria  "
 
+print(student_name)
 print(student_name.strip().title())
 print(f"Welcome, {student_name.strip().title()}!")
 
@@ -78,12 +81,18 @@ print(topic)
 raw_students = "24"
 raw_completion_rate = "0.82"
 
-students = int(raw_students)
+students = int(raw_students) # casteo por constructor
 completion_rate = float(raw_completion_rate)
 summary = f"Students: {students} | Completion: {completion_rate:.0%}"
 
 print(summary)
 
+print(type(students).__name__, type(completion_rate).__name__)
+
+students = str(students)  # convertir de int a str
+completion_rate = str(completion_rate)  # convertir de float a str
+
+print(type(students).__name__, students, type(completion_rate).__name__, completion_rate)
 # %% [markdown]
 # ## Operaciones básicas
 #
@@ -96,7 +105,13 @@ pending_lessons = total_lessons - completed_lessons
 
 print("pending_lessons:", pending_lessons)
 print("module_ready:", completed_lessons >= 2)
-print("same_total:", total_lessons == 8)
+print("same_total:", total_lessons == 9)
+
+
+saludo = "hola"
+despedida = "holA"
+
+print(saludo > despedida)  # True
 
 # %% [markdown]
 # ## Truthy y falsy
@@ -111,10 +126,20 @@ examples = [
     ("empty list", []),
     ("course name", "Python"),
     ("student count", 12),
+    ("subjects", ["math", "science"]),
 ]
 
 for label, value in examples:
-    print(f"{label:<12} -> {bool(value)}")
+    print(f"{label:<15} -> {bool(value)}")
+
+# %%
+nombre = "Ana"
+apellido = "Cortes"
+
+if nombre and apellido:
+    print(f"Usuario registrado: {nombre} {apellido}")
+else:
+    print("Faltan datos de usuario")
 
 # %% [markdown]
 # ## `None` vs Empty Containers (Gotcha importante)
@@ -127,20 +152,23 @@ for label, value in examples:
 # - `[]` significa "existe, pero no tiene elementos"
 # - Esta diferencia importa para validación y configuración
 
+
 # %%
-def process_data(values):
+def process_data(values: list[int]):
     """El problema: if values captura tanto [] como None"""
     if values:
         return sum(values)
     return 0  # ¿Es 0 lo correcto para [] Y None?
 
+
 # Sin distinguir, pierdes información valiosa:
-print("Empty list result:", process_data([]))      # Retorna 0
-print("None result:", process_data(None))          # También retorna 0
+print("Empty list result:", process_data([]))  # Retorna 0
+print("None result:", process_data(None))  # También retorna 0
 print("¿Cómo diferencias si fue None o []?")
 
 # %% [markdown]
 # La solución: verifica explícitamente con `is None`
+
 
 # %%
 def process_data_correct(values):
@@ -150,6 +178,7 @@ def process_data_correct(values):
     if not values:
         return 0  # Ahora sabemos que es []
     return sum(values)
+
 
 # Ahora puedes manejar cada caso:
 print("Empty list with check:", process_data_correct([]))
@@ -161,6 +190,7 @@ except ValueError as e:
 # %% [markdown]
 # Escenario real en pipelines de datos:
 # Configuración donde `None` = "usar default" y `[]` = "deshabilitado"
+
 
 # %%
 def configure_tags(user_tags=None, default_tags=None):
@@ -180,6 +210,7 @@ def configure_tags(user_tags=None, default_tags=None):
         tags = user_tags
 
     return tags
+
 
 print("No config (None):", configure_tags())
 print("Explicit empty []:", configure_tags(user_tags=[]))
