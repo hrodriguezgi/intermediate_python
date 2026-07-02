@@ -4,7 +4,8 @@
 # ## Objetivos
 #
 # - Usar comprehensions cuando la transformación es simple.
-# - Introducir generadores para no materializar datos innecesarios.
+# - Entender generadores para procesar datos grandes sin cargar todo en memoria.
+# - Conocer cuándo usar comprehensions vs generadores según el tamaño de datos.
 
 # %%
 events = [
@@ -38,7 +39,7 @@ active_users = {event["user"] for event in events if event["duration"] >= 20}
 print(active_users)
 
 # %% [markdown]
-# ## Generadores
+# ## Generadores (funciones con `yield`)
 #
 # Son una buena opción para procesar secuencias largas sin cargar todo en memoria.
 
@@ -53,12 +54,69 @@ def durations_over(limit: int):
 for duration in durations_over(20):
     print(duration)
 
+# %% [markdown]
+# ## Expresiones generador vs list comprehensions
+#
+# **El problema:** Con datos grandes, una list comprehension carga TODO en memoria.
+# Una expresión generador procesa un elemento a la vez.
+#
+# En pipelines de datos reales (millones de filas), esto es crítico.
+
+
 # %%
-total_duration = sum(event["duration"] for event in events if event["status"] == "ok")
-print(total_duration)
+# Real scenario: Procesar un CSV muy grande (100M filas)
+
+# ❌ List comprehension: carga TODO en memoria
+# results = [transform(row) for row in huge_dataset]  # Needs GB of RAM
+
+# ✅ Expresión generador: procesa fila por fila
+def process_large_dataset(rows):
+    for row in rows:
+        if row.get("status") == "ok":
+            yield row["duration"] * 2
+
+
+# Simulating a lazy iteration
+fake_dataset = iter(events)
+results = (event["duration"] * 2 for event in fake_dataset if event["status"] == "ok")
+
+# Consumir bajo demanda (una a la vez)
+print("Generator expression (lazy):")
+for result in results:
+    print(f"  Processed: {result}")
+
+# %% [markdown]
+# ## Cuándo usar cada una
+#
+# | Caso | Usa |
+# |------|-----|
+# | Datos pequeños (<1000 elementos) | List comprehension |
+# | Necesitas reutilizar varias veces | List comprehension |
+# | Datos grandes (millones) | Expresión generador |
+# | Procesamiento en streaming | Generador con `yield` |
+# | Solo necesitas iterar una vez | Generador |
+
+
+# %%
+# Comparación
+small_events = events  # Just for demo
+
+# Comprehension: lista completa en memoria
+list_result = [e["duration"] for e in small_events if e["status"] == "ok"]
+print(f"List comprehension result: {list_result}")
+
+# Generator expression: evaluado bajo demanda
+gen_result = (e["duration"] for e in small_events if e["status"] == "ok")
+print(f"Generator expression result: {gen_result}")  # Solo muestra el objeto generador
+
+# Consumir el generador
+print("Consuming generator:")
+for item in gen_result:
+    print(f"  {item}")
 
 # %% [markdown]
 # ## Resumen
 #
-# - Las comprehensions funcionan bien para una transformación puntual.
-# - Los generadores ayudan a escalar el procesamiento.
+# - Las comprehensions funcionan bien para una transformación puntual con datos pequeños.
+# - Los generadores (funciones con `yield` o expresiones) escalan para datos grandes.
+# - En pipelines de datos, usa generadores para evitar sobrecargar memoria.
