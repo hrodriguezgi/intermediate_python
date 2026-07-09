@@ -66,10 +66,10 @@ for duration in durations_over(20):
 # %%
 # Real scenario: Procesar un CSV muy grande (100M filas)
 
-# ❌ List comprehension: carga TODO en memoria
+# List comprehension: carga TODO en memoria
 # results = [transform(row) for row in huge_dataset]  # Needs GB of RAM
 
-# ✅ Expresión generador: procesa fila por fila
+# Expresión generador: procesa fila por fila
 def process_large_dataset(rows):
     for row in rows:
         if row.get("status") == "ok":
