@@ -58,8 +58,70 @@ def format_labels(*labels: str, uppercase: bool = False) -> list[str]:
 print(format_labels("python", "sqlite", uppercase=True))
 
 # %% [markdown]
+# ## Trampa: argumentos mutables por defecto
+#
+# Un error común: usar listas o diccionarios como valores por defecto.
+# Se comparten entre todas las llamadas a la función.
+
+
+# %%
+# INCORRECTO: la lista se comparte
+def collect_data_wrong(new_item, cache=[]):
+    cache.append(new_item)
+    return cache
+
+
+result1 = collect_data_wrong("first")
+print(f"First call: {result1}")
+
+result2 = collect_data_wrong("second")
+print(f"Second call: {result2}")  # ["first", "second"] - ¡comparten cache!
+
+# %% [markdown]
+# El problema: la lista `[]` se crea UNA SOLA VEZ cuando se define la función,
+# no en cada llamada. Todas las llamadas reutilizan la misma lista.
+
+# %%
+# CORRECTO: crear el valor por defecto en cada llamada
+def collect_data(new_item, cache=None):
+    if cache is None:
+        cache = []
+    cache.append(new_item)
+    return cache
+
+
+result1 = collect_data("first")
+print(f"First call: {result1}")
+
+result2 = collect_data("second")
+print(f"Second call: {result2}")  # ["second"] - listas independientes
+
+# %% [markdown]
+# ## Escenario real: tuberías de datos
+#
+# En pipelines ETL, esto causa bugs silenciosos donde múltiples registros
+# comparten el mismo estado.
+
+
+# %%
+def process_record(record: dict, tags: list = None) -> dict:
+    if tags is None:
+        tags = []
+    tags.append(record.get("id"))
+    return {**record, "tags": tags}
+
+
+# Cada registro debe tener sus propias tags
+record1 = process_record({"id": 1, "name": "Alice"})
+print(f"Record 1 tags: {record1['tags']}")
+
+record2 = process_record({"id": 2, "name": "Bob"})
+print(f"Record 2 tags: {record2['tags']}")  # Solo [2], no [1, 2]
+
+# %% [markdown]
 # ## Resumen
 #
 # - Una función pequeña es más fácil de validar.
 # - Un nombre claro comunica la intención.
 # - `*args` y `**kwargs` deben usarse con criterio.
+# - Nunca uses mutables (`[]`, `{}`) como valores por defecto. Usa `None` en su lugar.
