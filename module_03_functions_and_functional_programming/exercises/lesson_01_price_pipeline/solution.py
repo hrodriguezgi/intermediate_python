@@ -49,11 +49,8 @@ if __name__ == "__main__":
 
     # Caso 3: Precios con diferentes impuestos (países diferentes)
     prices = ["50", "75.5", "200"]
-    results3 = [
-        apply_transformations(price, apply_tax_21, round_to_2)
-        for price in prices
-    ]
+    results3 = [apply_transformations(price, apply_tax_21, round_to_2) for price in prices]
     print(f"Test 3 - Múltiples precios con 21% impuesto: {results3}")
     assert results3 == [60.5, 91.36, 242.0]
 
-    print("\n✓ Todos los tests pasaron!")
+    print("\n Todos los tests pasaron!")

@@ -39,7 +39,7 @@ result = fetch_data_from_api("https://api.example.com/data")
 Intento 1/3: fetch_data_from_api(https://api.example.com/data) - Falló (ValueError: API no disponible)
 Intento 2/3: fetch_data_from_api(https://api.example.com/data) - Falló (ValueError: API no disponible)
 Intento 3/3: fetch_data_from_api(https://api.example.com/data) - Éxito (2.45s)
-✓ Completado en 2.45s
+ Completado en 2.45s
 ```
 
 ## Notas

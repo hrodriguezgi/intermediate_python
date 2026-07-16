@@ -12,6 +12,7 @@ def retry(times: int):
     3. Medir tiempo total de ejecución
     4. Relanzar la última excepción si todos fallan
     """
+
     def decorator(function):
         @wraps(function)
         def wrapper(*args, **kwargs):
@@ -20,7 +21,7 @@ def retry(times: int):
             # - Usa un bucle para reintentar
             # - Registra: f"Intento {attempt}/{times}: {function.__name__}(...) - "
             # - Mide tiempo con time.perf_counter()
-            # - Si es exitoso, imprime: f"✓ Completado en {elapsed:.2f}s"
+            # - Si es exitoso, imprime: f" Completado en {elapsed:.2f}s"
             pass
 
         return wrapper

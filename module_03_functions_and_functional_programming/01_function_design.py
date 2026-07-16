@@ -19,11 +19,30 @@ scores = [88, 91, 74, 100, 95]
 
 
 # %%
+# función sin argumentos
+def say_hello():
+    print("hola", "mundo", "cruel", sep="\n")
+
+
+# %%
+say_hello()
+
+
+# %%
+def say_goodbye():
+    return "adiós mundo cruel"
+
+
+# %%
+say_goodbye()
+
+
+# %%
 def normalize_score(score: int, max_score: int = 100) -> float:
     return round(score / max_score, 2)
 
 
-normalized_scores = [normalize_score(score) for score in scores]
+normalized_scores = [normalize_score(score=score) for score in scores]
 print(normalized_scores)
 
 # %% [markdown]
@@ -49,10 +68,10 @@ print(build_grade_report(scores))
 
 
 # %%
-def format_labels(*labels: str, uppercase: bool = False) -> list[str]:
+def format_labels(*labels, uppercase: bool = False) -> list[str]:
     if uppercase:
-        return [label.upper() for label in labels]
-    return [label.title() for label in labels]
+        return [label.upper() for label in labels]  # list comprehension
+    return [label.title() for label in labels]  # list comprehension
 
 
 print(format_labels("python", "sqlite", uppercase=True))
@@ -81,16 +100,19 @@ print(f"Second call: {result2}")  # ["first", "second"] - ¡comparten cache!
 # El problema: la lista `[]` se crea UNA SOLA VEZ cuando se define la función,
 # no en cada llamada. Todas las llamadas reutilizan la misma lista.
 
+
 # %%
 # CORRECTO: crear el valor por defecto en cada llamada
 def collect_data(new_item, cache=None):
     if cache is None:
         cache = []
-    cache.append(new_item)
+        cache.append(new_item)
+    elif isinstance(cache, list):
+        cache.append(new_item)
     return cache
 
 
-result1 = collect_data("first")
+result1 = collect_data("first", ["zero"])
 print(f"First call: {result1}")
 
 result2 = collect_data("second")
@@ -111,12 +133,29 @@ def process_record(record: dict, tags: list = None) -> dict:
     return {**record, "tags": tags}
 
 
-# Cada registro debe tener sus propias tags
-record1 = process_record({"id": 1, "name": "Alice"})
-print(f"Record 1 tags: {record1['tags']}")
+def process_record2(record: dict, tags: list = None) -> dict:
+    if tags is None:
+        tags = []
+    tags.append(record.get("id"))
+    record["tags"] = tags
+    return record
 
-record2 = process_record({"id": 2, "name": "Bob"})
-print(f"Record 2 tags: {record2['tags']}")  # Solo [2], no [1, 2]
+
+# Cada registro debe tener sus propias tags
+rec1 = {"id": 1, "name": "Alice"}
+record1 = process_record(rec1)
+print(rec1, record1, sep="\n")
+# print(f"Record 1 tags: {record1['tags']}")
+
+# rec2 = {"id": 2, "name": "Bob"}
+# record2 = process_record(rec2)
+# print(f"Record 2 tags: {record2['tags']}")  # Solo [2], no [1, 2]
+
+# %%
+rec1 = {"id": 1, "name": "Alice"}
+record1 = process_record2(rec1)
+print(rec1, record1, sep="\n")
+
 
 # %% [markdown]
 # ## Resumen

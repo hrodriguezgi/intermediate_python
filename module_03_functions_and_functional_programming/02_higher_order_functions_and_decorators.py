@@ -42,9 +42,8 @@ from pathlib import Path
 sample_csv = Path("/tmp/sample_data.csv")
 
 # Crear archivo de ejemplo
-sample_csv.write_text(
-    "id,name,value\n1,Alice,100\n2,Bob,200\n3,Charlie,300\n"
-)
+sample_csv.write_text("id,name,value\n1,Alice,100\n2,Bob,200\n3,Charlie,300\n")
+
 
 # MAL: cargar todo en memoria (crash con archivos grandes)
 def load_all_wrong(path):
@@ -101,11 +100,18 @@ def double(values: list[int]) -> list[int]:
 print(apply_pipeline(numbers, keep_even, double))
 
 # %% [markdown]
-# ## Decoradores
+# ## Decoradores: Modificar comportamiento sin cambiar código
+#
+# Un decorador envuelve una función añadiendo funcionalidad:
+# logging, timing, validación, caché, etc.
+#
+# **Patrón:** función_original → decorador → función_mejorada
 
 
 # %%
+# Ejemplo básico: @traced
 def traced(function):
+    """Decorador que imprime entrada y salida de función."""
     @wraps(function)
     def wrapper(*args, **kwargs):
         print(f"calling {function.__name__} with args={args}, kwargs={kwargs}")
@@ -118,21 +124,44 @@ def traced(function):
 
 @traced
 def compute_discount(total: float, rate: float) -> float:
+    """Calcula descuento (usado con @traced para ver qué pasa)."""
     return round(total * (1 - rate), 2)
 
 
 compute_discount(250, 0.15)
 
 # %% [markdown]
+# ## Cuándo usar decoradores
+#
+# **Casos de uso reales:**
+#
+# - **Logging:** Saber qué funciones se ejecutan, con qué argumentos
+# - **Timing:** Medir cuánto tarda cada paso (crítico en ETL)
+# - **Validación:** Verificar argumentos antes de ejecutar
+# - **Caché:** Guardar resultados para evitar recálculos
+# - **Reintento:** Reintentar si falla (para APIs inestables)
+# - **Monitoreo:** Reportar errores o métricas a sistemas de alertas
+#
+# Los decoradores son perfectos para pipelines de datos donde necesitas
+# visibilidad de qué está pasando sin modificar la lógica core.
+
+# %% [markdown]
 # ## Decoradores prácticos: @timing
 #
-# En pipelines ETL, necesitas medir cuánto tiempo toma cada operación.
+# **Uso:** Mide cuánto tarda cada operación.
+#
+# **Por qué importa:**
+# - ETL pipelines tienen cuellos de botella (¿dónde se demora?)
+# - Detectar operaciones lentas sin agregar código en cada función
+# - Monitorear performance en producción
 
 
 # %%
 import time
 
+
 def timing(function):
+    """Mide y reporta tiempo de ejecución."""
     @wraps(function)
     def wrapper(*args, **kwargs):
         start = time.perf_counter()
@@ -146,30 +175,38 @@ def timing(function):
 
 @timing
 def load_data(path: str) -> list[dict]:
-    time.sleep(0.1)  # Simular I/O
+    """Simula lectura de datos (I/O lento)."""
+    time.sleep(0.1)  # Simular I/O (disco, red)
     return [{"id": i, "value": i * 10} for i in range(100)]
 
 
 @timing
 def transform_data(records: list[dict]) -> list[dict]:
-    time.sleep(0.05)  # Simular procesamiento
-    return [
-        {**record, "value": record["value"] * 2}
-        for record in records
-    ]
+    """Simula transformación de datos."""
+    time.sleep(0.05)  # Simular CPU
+    return [{**record, "value": record["value"] * 2} for record in records]
 
 
 data = load_data("data.csv")
 transformed = transform_data(data)
 
 # %% [markdown]
+# Salida: Ves exactamente cuánto tarda cada paso sin modificar las funciones.
+
+# %% [markdown]
 # ## Decoradores prácticos: @log_calls
 #
-# Ver qué argumentos se pasan a una función (útil para debugging).
+# **Uso:** Registra argumentos y resultado de cada llamada.
+#
+# **Por qué importa:**
+# - Debugging: ¿Qué datos entra a la función?
+# - Auditoría: Registrar qué validaciones fallaron y por qué
+# - Testing: Verificar que se llama con argumentos correctos
 
 
 # %%
 def log_calls(function):
+    """Registra argumentos de entrada y resultado de salida."""
     @wraps(function)
     def wrapper(*args, **kwargs):
         args_str = ", ".join(repr(a) for a in args)
@@ -185,6 +222,7 @@ def log_calls(function):
 
 @log_calls
 def validate_record(record: dict, strict: bool = False) -> bool:
+    """Valida que un registro tenga campos requeridos."""
     if strict:
         required = ["id", "name", "email"]
         return all(key in record for key in required)
@@ -195,23 +233,30 @@ validate_record({"id": 1, "name": "Alice"})
 validate_record({"id": 2, "name": "Bob", "email": "bob@example.com"}, strict=True)
 
 # %% [markdown]
-# ## Escenario real: monitoreo de ETL
+# Verás exactamente qué entra y qué sale, sin escribir print() en el código.
+
+# %% [markdown]
+# ## Escenario real: @monitoring para ETL
 #
-# Combina timing + logging para rastrear qué tarda en un pipeline.
+# Combina timing + logging + manejo de errores.
+#
+# **Objetivo:** Visibilidad completa de qué pasa en cada paso del pipeline:
+# - ✓ Cuánto tardó
+# - ✓ Cuántos registros procesó
+# - ✗ Si falló, cuándo y por qué
 
 
 # %%
 def monitoring(function):
+    """Decora con timing, logging de éxito/fallo, y conteo de items."""
     @wraps(function)
     def wrapper(*args, **kwargs):
         start = time.perf_counter()
         try:
             result = function(*args, **kwargs)
             elapsed = time.perf_counter() - start
-            print(
-                f"✓ {function.__name__} completado en {elapsed:.4f}s "
-                f"({len(result) if isinstance(result, (list, dict)) else '?'} items)"
-            )
+            item_count = len(result) if isinstance(result, (list, dict)) else "?"
+            print(f"✓ {function.__name__} completado en {elapsed:.4f}s ({item_count} items)")
             return result
         except Exception as e:
             elapsed = time.perf_counter() - start
@@ -223,17 +268,22 @@ def monitoring(function):
 
 @monitoring
 def extract_from_source(source: str) -> list[dict]:
+    """Extrae datos de una fuente (BD, API, archivo)."""
     return [{"id": i, "data": f"record_{i}"} for i in range(50)]
 
 
 @monitoring
 def validate_batch(records: list[dict]) -> list[dict]:
+    """Valida lote de registros."""
     valid = [r for r in records if "id" in r and "data" in r]
     return valid
 
 
 extracted = extract_from_source("database.db")
 validated = validate_batch(extracted)
+
+# %% [markdown]
+# Output muestra cada paso: qué pasó, cuánto tardó, cuántos registros.
 
 # %% [markdown]
 # ## Funciones parciales para tuberías
@@ -243,8 +293,8 @@ validated = validate_batch(extracted)
 
 
 # %%
-from functools import partial
-from functools import reduce
+from functools import partial, reduce
+
 
 # Función flexible que normaliza scores
 def normalize_score(score: int | float, max_score: int = 100) -> float:

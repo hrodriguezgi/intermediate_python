@@ -1,7 +1,7 @@
 # Exercise · Price Pipeline with Partial Functions
 
 ## Objetivo
-Crea una tubería reutilizable de transformación de precios usando `functools.partial` 
+Crea una tubería (pipeline) reutilizable de transformación de precios usando `functools.partial` 
 y evitando el error de argumentos mutables por defecto.
 
 ## Requisitos
@@ -47,6 +47,6 @@ result2 = price_with_discount(result1)
 ```
 
 ## Notas
-- No uses listas/diccionarios como argumentos por defecto (❌ `cache=[]`)
-- Usa `None` como valor por defecto si necesitas inicializar (✅ `cache=None`)
+- No uses listas/diccionarios como argumentos por defecto ( `cache=[]`)
+- Usa `None` como valor por defecto si necesitas inicializar ( `cache=None`)
 - Prueba con valores del mundo real: "10.50", "20,99" (con diferentes separadores)

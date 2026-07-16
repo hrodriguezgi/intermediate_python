@@ -8,6 +8,7 @@ def retry(times: int):
 
     Registra logs de cada intento y mide el tiempo total de ejecución.
     """
+
     def decorator(function):
         @wraps(function)
         def wrapper(*args, **kwargs):
@@ -18,15 +19,12 @@ def retry(times: int):
                 try:
                     result = function(*args, **kwargs)
                     elapsed = time.perf_counter() - start
-                    print(f"✓ {function.__name__} completado en {elapsed:.2f}s")
+                    print(f" {function.__name__} completado en {elapsed:.2f}s")
                     return result
                 except Exception as error:
                     last_error = error
                     args_str = ", ".join(repr(a) for a in args)
-                    print(
-                        f"Intento {attempt}/{times}: {function.__name__}({args_str}) - "
-                        f"Falló ({type(error).__name__}: {error})"
-                    )
+                    print(f"Intento {attempt}/{times}: {function.__name__}({args_str}) - " f"Falló ({type(error).__name__}: {error})")
 
             # Si llegamos aquí, todos los intentos fallaron
             raise last_error
