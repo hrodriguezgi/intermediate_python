@@ -100,6 +100,90 @@ def double(values: list[int]) -> list[int]:
 print(apply_pipeline(numbers, keep_even, double))
 
 # %% [markdown]
+# ## Escenario real: Crear procesadores de datos reutilizables
+#
+# **Problema en ETL:** Procesas datos de diferentes fuentes con reglas diferentes.
+# Sin higher-order functions: repites código para cada fuente.
+# Con higher-order functions: creas procesadores configurables.
+
+
+# %%
+def create_data_processor(transformation_rules: dict):
+    """
+    Crea un procesador de datos personalizado.
+
+    Cada procesador aplica transformaciones específicas a campos.
+    Reutilizable para múltiples registros/lotes.
+    """
+
+    def process(record: dict) -> dict:
+        """Aplica transformaciones a un registro."""
+        result = record.copy()
+        for field, transform in transformation_rules.items():
+            if field in result and result[field] is not None:
+                try:
+                    result[field] = transform(result[field])
+                except Exception as e:
+                    raise ValueError(f"Error transformando {field}: {e}")
+        return result
+
+    return process
+
+
+# Caso 1: Procesar datos de usuarios
+# Nota: lambda permite combinar múltiples transformaciones
+user_processor = create_data_processor({
+    "email": lambda x: str.strip(x).lower(),  # Limpiar y minúsculas
+    "name": str.strip,  # Quitar espacios en blanco
+    "age": int,  # Convertir a entero
+})
+
+# Caso 2: Procesar datos de transacciones
+transaction_processor = create_data_processor({
+    "amount": float,  # Convertir a número
+    "reference": lambda x: str.strip(x).upper(),  # Limpiar y mayúsculas
+    "date": str.strip,  # Limpiar espacios
+})
+
+# Uso: diferentes fuentes, mismo patrón
+
+user_raw = {"email": "  USER@EXAMPLE.COM  ", "name": "  alice  ", "age": "30"}
+user_cleaned = user_processor(user_raw)
+print(f"Usuario limpiado: {user_cleaned}")
+
+transaction_raw = {"amount": "  150.50  ", "reference": "  txn_001  ", "date": "2025-07-16"}
+transaction_cleaned = transaction_processor(transaction_raw)
+print(f"Transacción limpiada: {transaction_cleaned}")
+
+# %% [markdown]
+# ## Ventaja: Crear especializadas sin repetir código
+#
+# Cada procesador está configurado una vez,
+# se reutiliza miles de veces en lotes.
+
+
+# %%
+# Procesar lotes completos
+users_raw = [
+    {"email": "ALICE@EXAMPLE.COM", "name": "alice smith", "age": "30"},
+    {"email": "BOB@EXAMPLE.COM", "name": "bob jones", "age": "25"},
+    {"email": "CHARLIE@EXAMPLE.COM", "name": "charlie brown", "age": "35"},
+]
+
+users_cleaned = [user_processor(user) for user in users_raw]
+
+print("Lote de usuarios limpiados:")
+for user in users_cleaned:
+    print(f"  - {user['name']} ({user['email']}), edad: {user['age']}")
+
+# %% [markdown]
+# ## Resumen: funciones de orden superior
+#
+# - **apply_pipeline:** Encadena operaciones (una tras otra)
+# - **create_data_processor:** Crea procesadores especializados (configurables)
+# - Ambas son reutilizables y evitan repetir código
+
+# %% [markdown]
 # ## Decoradores: Modificar comportamiento sin cambiar código
 #
 # Un decorador envuelve una función añadiendo funcionalidad:
