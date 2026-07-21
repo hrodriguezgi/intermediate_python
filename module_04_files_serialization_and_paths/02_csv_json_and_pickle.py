@@ -34,7 +34,7 @@ print(rows)
 # Para un CSV de 10GB, esto falla.
 
 # %%
-# ❌ INCORRECTO: Carga todo en memoria
+#  INCORRECTO: Carga todo en memoria
 # rows = list(csv.DictReader(csv_file))  # 10GB CSV -> crash
 
 # %% [markdown]
@@ -107,7 +107,7 @@ Bob;25;Barcelona"""
 euro_path = DATA_DIR / "european.csv"
 euro_path.write_text(european_csv_content, encoding="utf-8")
 
-# ❌ INCORRECTO: Asume comma como delimitador
+#  INCORRECTO: Asume comma como delimitador
 with euro_path.open(encoding="utf-8") as f:
     reader = csv.DictReader(f)
     wrong_rows = list(reader)
@@ -121,16 +121,19 @@ with euro_path.open(encoding="utf-8") as f:
 
 # %% [markdown]
 # ### Variaciones comunes de CSV
+#
+# Real CSV files use different delimiters:
+# - **Comma** (`,`) — USA standard
+# - **Semicolon** (`;`) — Europe (Excel)
+# - **Tab** (`\t`) — Tab-separated values
+# - **Pipe** (`|`) — Legacy systems
+#
+# Always combine with encoding handling for robustness.
+
+# %% [markdown]
+# ### Encoding + Dialect juntos
 
 # %%
-# Diferentes delimitadores
-csv_variants = {
-    "comma": ",",      # Estándar USA
-    "semicolon": ";",  # Europa
-    "tab": "\t",       # Tab-separated
-    "pipe": "|",       # Legacy systems
-}
-
 # Encoding + dialect juntos (real scenario)
 def read_csv_flexible(path: Path, delimiter: str = ",", encoding: str = "utf-8"):
     """Lee CSV con flexibilidad en delimitador y encoding."""
