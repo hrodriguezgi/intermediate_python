@@ -4,18 +4,24 @@ from pathlib import Path
 
 
 def export_catalog(csv_path: Path, json_path: Path) -> dict:
-    with csv_path.open(encoding="utf-8") as handle:
-        rows = list(csv.DictReader(handle))
+    """
+    Lee CSV de productos y genera JSON con resumen.
 
-    payload = {
-        "total_items": len(rows),
-        "inventory_units": sum(int(row["stock"]) for row in rows),
-        "items": rows,
-    }
-    json_path.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-    return payload
+    Args:
+        csv_path: Ruta al archivo CSV de productos
+        json_path: Ruta donde escribir el JSON de salida
+
+    Returns:
+        Dict con: {"total_items": int, "inventory_units": int, "items": list}
+
+    Hints:
+        - Usa csv.DictReader para leer el CSV
+        - Calcula total_items (cantidad de filas)
+        - Calcula inventory_units (suma de la columna "stock")
+        - Usa json.dumps() para convertir a JSON
+    """
+    # TODO: Implementa la función
+    pass
 
 
 if __name__ == "__main__":

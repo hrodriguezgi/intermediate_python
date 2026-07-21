@@ -2,12 +2,19 @@ from pathlib import Path
 
 
 def summarize_log(path: Path) -> dict:
-    summary = {"INFO": 0, "WARNING": 0, "ERROR": 0}
-    for line in path.read_text(encoding="utf-8").splitlines():
-        for level in summary:
-            if line.startswith(level):
-                summary[level] += 1
-    return summary
+    """
+    Lee archivo de logs y retorna conteo de líneas por nivel.
+
+    Args:
+        path: Ruta al archivo de logs
+
+    Returns:
+        Dict con conteos: {"INFO": int, "WARNING": int, "ERROR": int}
+
+    Hint: Usa read_text() para leer el archivo con encoding="utf-8"
+    """
+    # TODO: Implementa la función
+    pass
 
 
 if __name__ == "__main__":
