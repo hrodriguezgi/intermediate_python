@@ -164,9 +164,17 @@ json_path.write_text(
 print(json.loads(json_path.read_text(encoding="utf-8"))["total_items"])
 
 # %% [markdown]
-# ## Pickle
+# ## Pickle: Serialización de objetos Python
 #
-# Útil para persistencia rápida interna, no para intercambio externo.
+# **Úsalo SOLO para:**
+# - Cache interno (datos computados que necesitas reutilizar)
+# - Estado de aplicación (no intercambio externo)
+# - ML models (después del entrenamiento)
+#
+# **NUNCA lo uses para:**
+# - Datos de usuarios (security risk)
+# - Intercambio con otros sistemas (solo entiende Python)
+# - Datos no confiables (arbitrary code execution)
 
 # %%
 pickle_path = DATA_DIR / "products.pickle"
@@ -178,23 +186,84 @@ else:
     print("No data in pickle")
 
 # %% [markdown]
+# ### Scenario real: Cache de resultados computados
+
+# %%
+import time
+from datetime import datetime
+
+def expensive_computation(data: list) -> dict:
+    """Simulación de cálculo costoso (ej: ML prediction)."""
+    time.sleep(0.1)  # Simula trabajo pesado
+    return {
+        "result": sum(int(row.get("stock", 0)) for row in data),
+        "computed_at": datetime.now().isoformat(),
+    }
+
+# Sin cache: recalcula cada vez (lento)
+result1 = expensive_computation(rows)
+print(f"Sin cache: {result1}")
+
+# Con pickle cache: guarda resultado, reutiliza
+cache_path = DATA_DIR / "computation_cache.pickle"
+
+# Primera vez: calcula y guarda
+if not cache_path.exists():
+    result = expensive_computation(rows)
+    cache_path.write_bytes(pickle.dumps(result))
+    print(f"Cache creado: {result}")
+else:
+    # Uso posterior: recupera del cache (instant)
+    cached_result = pickle.loads(cache_path.read_bytes())
+    print(f"Cache hit (instant): {cached_result}")
+
+# %% [markdown]
+# ### Scenario real: Serializar modelos ML
+#
+# ```python
+# # Entrenar modelo (tarda minutos)
+# model = train_model(training_data)
+#
+# # Guardar con pickle
+# model_path = Path("trained_model.pickle")
+# model_path.write_bytes(pickle.dumps(model))
+#
+# # En producción: cargar y predecir (instant)
+# model = pickle.loads(model_path.read_bytes())
+# prediction = model.predict(new_data)
+# ```
+
+# %% [markdown]
 # ## TOML: Configuración moderna
 #
 # Python 3.11+ tiene `tomllib` built-in. Mejor que JSON para configs.
+# - Soporta comentarios
+# - Más legible que JSON
+# - Tipos de datos nativos (bool, int, strings)
+# - Sin comillas innecesarias
 
 # %%
 import tomllib
 
 # Archivo TOML (legible, permite comentarios)
 toml_content = """
+# Configuración de la aplicación
+
 [database]
 host = "localhost"
 port = 5432
-debug = true  # Comentarios permitidos
+user = "admin"
+password = "secret123"  # NUNCA dejes passwords en repo
+debug = true
 
 [cache]
-ttl = 3600
+ttl = 3600  # 1 hora en segundos
 enabled = true
+backends = ["redis", "memcached"]
+
+[logging]
+level = "INFO"
+file = "/var/log/app.log"
 """
 
 toml_path = DATA_DIR / "config.toml"
@@ -204,6 +273,59 @@ toml_path.write_text(toml_content, encoding="utf-8")
 with toml_path.open("rb") as f:
     config = tomllib.load(f)
     print(f"Config database: {config['database']['host']}")
+    print(f"Cache backends: {config['cache']['backends']}")
+
+# %% [markdown]
+# ### Scenario real: Configuración de aplicación ETL
+#
+# ```toml
+# # pyproject.toml o config.toml
+# [etl]
+# batch_size = 10000
+# timeout_seconds = 300
+# retry_attempts = 3
+#
+# [sources.csv]
+# path = "data/input.csv"
+# delimiter = ";"
+# encoding = "utf-8-sig"
+#
+# [sources.database]
+# host = "prod-db.internal"
+# port = 5432
+# pool_size = 20
+#
+# [output]
+# format = "json"
+# destination = "s3://bucket/output/"
+# ```
+
+# %% [markdown]
+# ### Comparación: JSON vs TOML
+
+# %%
+import json
+
+# Mismo config en JSON (vs TOML arriba)
+json_config = {
+    "etl": {
+        "batch_size": 10000,
+        "timeout_seconds": 300,
+        "retry_attempts": 3,
+    },
+    "sources": {
+        "csv": {
+            "path": "data/input.csv",
+            "delimiter": ";",
+            "encoding": "utf-8-sig",
+        }
+    },
+}
+
+print("\nJSON (verbose, sin comentarios):")
+print(json.dumps(json_config, indent=2)[:150] + "...")
+
+# TOML es más legible, especialmente para configuración grande
 
 # %% [markdown]
 # ## Resumen
