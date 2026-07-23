@@ -150,18 +150,94 @@ flexible_rows = read_csv_flexible(tab_path, delimiter="\t")
 print(f"Lectura flexible: {flexible_rows[0]}")
 
 # %% [markdown]
-# ## JSON
+# ## JSON: Serialización de datos estructurados
+#
+# **Úsalo para:**
+# - APIs (intercambio entre sistemas)
+# - Web services (REST, GraphQL)
+# - Datos que otros lenguajes necesitan leer
+# - Configuración básica (aunque TOML es mejor)
 
 # %%
-json_path = DATA_DIR / "products.json"
+# Métodos JSON: string vs file
+
+# %% [markdown]
+# ### `dumps()` vs `dump()` — String vs File
+#
+# | Método | Qué hace | Retorna | Uso |
+# |--------|----------|---------|-----|
+# | `json.dumps()` | Serializa a **string** | str | Enviar por red, logging, APIs |
+# | `json.dump()` | Serializa a **archivo** | nada | Guardar en disco |
+# | `json.loads()` | Deserializa **string** | dict/list | Recibir de API, parsear JSON en string |
+# | `json.load()` | Deserializa **archivo** | dict/list | Leer de disco |
+
+# %%
 payload = {
     "items": rows if rows else [{"name": "Sample", "price": "9.99"}],
     "total_items": len(rows) if rows else 1,
 }
-json_path.write_text(
-    json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
-)
-print(json.loads(json_path.read_text(encoding="utf-8"))["total_items"])
+
+# %% [markdown]
+# ### Opción 1: String (dumps/loads)
+
+# %%
+# Serializar a string
+json_string = json.dumps(payload, ensure_ascii=False, indent=2)
+print(f"JSON como string ({len(json_string)} caracteres):")
+print(json_string[:100] + "...")
+
+# Deserializar desde string
+parsed = json.loads(json_string)
+print(f"Parseado: {parsed['total_items']} items")
+
+# %% [markdown]
+# **Caso de uso:** APIs, logging, enviar por red
+
+# %%
+# Ejemplo: Respuesta de API
+def api_response(data: dict) -> str:
+    """Retorna JSON como string para HTTP response."""
+    return json.dumps(data, ensure_ascii=False)
+
+response = api_response(payload)
+print(f"API response: {response[:50]}...")
+
+# %% [markdown]
+# ### Opción 2: Archivo (dump/load)
+
+# %%
+# Guardar directamente a archivo
+json_path = DATA_DIR / "products.json"
+with json_path.open("w", encoding="utf-8") as f:
+    json.dump(payload, f, ensure_ascii=False, indent=2)
+
+print(f"Guardado en: {json_path.name}")
+
+# Leer directamente desde archivo
+with json_path.open("r", encoding="utf-8") as f:
+    loaded = json.load(f)
+
+print(f"Cargado: {loaded['total_items']} items")
+
+# %% [markdown]
+# **Caso de uso:** Guardar/cargar archivos en disco
+
+# %% [markdown]
+# ### Comparación: String vs File
+
+# %%
+print("Métodos JSON:")
+print("- dumps/loads: String ↔ Python (para APIs, logging)")
+print("- dump/load: Archivo ↔ Python (para almacenamiento)")
+print()
+
+# Mejor práctica: combinados
+print("Mejor práctica: usa dump/load para archivos")
+with json_path.open("w", encoding="utf-8") as f:
+    json.dump(payload, f, indent=2)
+
+print("✓ Más eficiente que: json_string = json.dumps(...)")
+print("                    path.write_text(json_string)")
 
 # %% [markdown]
 # ## Pickle: Serialización de objetos Python
