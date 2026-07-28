@@ -26,13 +26,16 @@ from dataclasses import dataclass
 student_name = "Ana"
 student_email = "ana@example.com"
 
+
 def print_student_info(name, email):
     print(f"{name} ({email})")
+
 
 print_student_info(student_name, student_email)
 
 # %% [markdown]
 # ### Con una clase: agrupamos datos y comportamiento
+
 
 # %%
 class Student:
@@ -55,6 +58,7 @@ student.print_info()
 #
 # El constructor inicializa atributos cuando se crea el objeto.
 # Se llama automáticamente al instanciar la clase.
+
 
 # %%
 class Student:
@@ -86,6 +90,7 @@ student2.print_info()
 @dataclass
 class Lesson:
     """Una lección con título y duración."""
+
     title: str
     duration_minutes: int
     published: bool = False
@@ -142,10 +147,12 @@ print(len(cohort))  # Llama a __len__
 #
 # Con `@dataclass`, se generan automáticamente `__init__` y `__repr__`:
 
+
 # %%
 @dataclass
 class SimpleLesson:
     """@dataclass genera __init__ y __repr__ automáticamente."""
+
     title: str
     duration: int
 
@@ -161,6 +168,7 @@ print(lesson)  # __repr__ automático
 #
 # La herencia funciona bien para relaciones "es un", pero cuando necesitas combinar
 # comportamientos de múltiples clases, la herencia profunda se vuelve problemática.
+
 
 # %%
 # Anti-patrón: herencia profunda
@@ -197,6 +205,7 @@ class JSONSource(DataSource):
 #
 # Componemos objetos simples en lugar de heredar. Mucho más flexible.
 
+
 # %%
 class Cache:
     def __init__(self):
@@ -222,11 +231,11 @@ class DataReader:
     def read(self, cache_key: str | None = None) -> dict:
         # Intentar desde caché primero
         if cache_key and self.cache and self.cache.has(cache_key):
-            print(f"✓ Desde caché: {cache_key}")
+            print(f" Desde caché: {cache_key}")
             return self.cache.get(cache_key)
 
         # Leer de la fuente
-        print("→ Leyendo desde fuente...")
+        print(" Leyendo desde fuente...")
         data = self.source.read()
 
         # Guardar en caché si es posible
@@ -241,8 +250,17 @@ csv_source = CSVSource("data.csv")
 cache = Cache()
 reader = DataReader(csv_source, cache)
 
+# %%
+
+# Hacemos un primer llamado del método read
 print(reader.read("csv_data"))  # Lee de fuente
+
+# %%
+
+# Hacemos un segundo llamado del método read
 print(reader.read("csv_data"))  # Desde caché
+
+# %%
 
 # Funciona con otras fuentes sin cambiar DataReader
 json_source = JSONSource("https://api.example.com/data")

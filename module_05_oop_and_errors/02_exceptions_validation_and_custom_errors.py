@@ -7,6 +7,7 @@
 # - Crear excepciones específicas cuando aporta claridad.
 
 # %%
+from abc import ABC, abstractmethod
 from collections.abc import Callable
 from typing import Protocol
 
@@ -29,6 +30,12 @@ try:
 except EnrollmentError as error:
     print("Enrollment failed:", error)
 
+# %%
+try:
+    print(enroll_student("Ana", 0))
+except EnrollmentError as error:
+    print("Enrollment failed:", error)
+
 # %% [markdown]
 # ## Excepciones con Contexto
 #
@@ -36,6 +43,7 @@ except EnrollmentError as error:
 #
 # Cuando procesas datos reales (filas de CSV, registros de API), necesitas saber
 # qué campo falló, qué valor era, por qué falló. Las excepciones simples no dan contexto.
+
 
 # %%
 # Versión simple: no es útil en debugging
@@ -54,22 +62,19 @@ def validate_row_simple(row: dict) -> bool:
 # %% [markdown]
 # ### La Solución: Excepciones con Contexto
 
+
 # %%
 class DataValidationError(ValueError):
     """Excepción con contexto para validación de datos."""
 
-    def __init__(
-        self, field: str, value: object, reason: str, row_num: int | None = None
-    ):
+    def __init__(self, field: str, value: object, reason: str, row_num: int | None = None):
         self.field = field
         self.value = value
         self.reason = reason
         self.row_num = row_num
 
         location = f" (row {row_num})" if row_num else ""
-        message = (
-            f"Validation failed{location}: {field}={value!r} - {reason}"
-        )
+        message = f"Validation failed{location}: {field}={value!r} - {reason}"
         super().__init__(message)
 
 
@@ -114,15 +119,16 @@ rows = [
 for i, row in enumerate(rows, 1):
     try:
         validate_row(row, row_num=i)
-        print(f"Row {i}: ✓ Valid")
+        print(f"Row {i}:  Valid")
     except DataValidationError as e:
-        print(f"Row {i}: ✗ {e}")
+        print(f"Row {i}:  {e}")
         print(f"  Field: {e.field}, Value: {e.value}, Reason: {e.reason}")
 
 # %% [markdown]
 # ## Elegir la Excepción Correcta
 #
 # Diferentes problemas merecen diferentes tipos de excepciones.
+
 
 # %%
 # ValueError: entrada del usuario/datos inválida (no el tipo correcto)
@@ -137,13 +143,9 @@ def process_count(value: str) -> int:
 
 
 # TypeError: error de programación (tipo completamente equivocado)
-def process_with_callback(
-    data: list, callback: Callable[[object], object] | None = None
-) -> list:
+def process_with_callback(data: list, callback: Callable[[object], object] | None = None) -> list:
     if callback is not None and not callable(callback):
-        raise TypeError(
-            f"callback must be callable, got {type(callback).__name__}"
-        )
+        raise TypeError(f"callback must be callable, got {type(callback).__name__}")
     return [callback(x) if callback else x for x in data]
 
 
@@ -152,9 +154,7 @@ class InsufficientFundsError(Exception):
     def __init__(self, balance: float, amount: float):
         self.balance = balance
         self.amount = amount
-        super().__init__(
-            f"Insufficient funds: balance={balance}, requested={amount}"
-        )
+        super().__init__(f"Insufficient funds: balance={balance}, requested={amount}")
 
 
 def transfer_funds(balance: float, amount: float) -> float:
@@ -182,43 +182,180 @@ def process_state(state: str) -> str:
 # | `RuntimeError` | Nunca debería pasar (bug) | Estado desconocido |
 
 # %% [markdown]
-# ## Protocol Types (Avanzado)
+# ## Protocol Types (Interfaces sin Herencia)
 #
-# Para interfaces más limpias sin herencia, usa `Protocol`.
+# ### El Problema: Heredar solo para compartir una interfaz
 
 # %%
+# Sin Protocol: necesitas heredar de una clase base
 
 
-class DataLoader(Protocol):
-    """Interfaz estructural: cualquier objeto con método load() funciona."""
+class LoaderBase(ABC):
+    """Clase base solo para definir interfaz."""
+
+    @abstractmethod
+    def load(self) -> dict:
+        pass
+
+
+class CSVLoader(LoaderBase):
+    """Debe heredar explícitamente para ser "compatible"."""
 
     def load(self) -> dict:
+        return {"rows": 100, "file": "data.csv"}
+
+
+class APILoader(LoaderBase):
+    """También debe heredar."""
+
+    def load(self) -> dict:
+        return {"items": 50, "api": "https://api.example.com"}
+
+
+# %% [markdown]
+# ### La Solución: Protocol - "Duck Typing con Type Hints"
+#
+# Protocol dice: "Si un objeto tiene estos métodos, lo considero compatible,
+# sin necesidad de herencia explícita."
+
+# %%
+# Con Protocol: no necesitas heredar, solo tener los métodos correctos
+class DataLoader(Protocol):
+    """'Contrato' - cualquier objeto con método load() es un DataLoader."""
+
+    def load(self) -> dict:
+        """Este método debe existir en objetos que usen Protocol."""
         ...
 
 
+# Estas clases NO heredan de nada, pero Python las ve como DataLoader
 class SimpleCSVLoader:
+    """Sin herencia, pero tiene el método load()."""
+
     def load(self) -> dict:
-        return {"rows": 100}
+        print("Leyendo archivo CSV...")
+        return {"rows": 1000, "columns": 5}
 
 
-class APILoader:
+class DatabaseLoader:
+    """Totalmente diferente, pero también tiene load()."""
+
     def load(self) -> dict:
-        return {"items": 50}
+        print("Consultando base de datos...")
+        return {"records": 500, "tables": 3}
 
 
-def process_data(loader: DataLoader) -> None:
-    """Acepta cualquier objeto que tenga método load()."""
-    data = loader.load()
-    print(f"Procesando {len(data)} items")
+class JSONFileLoader:
+    """Otro tipo más, con el mismo método."""
 
+    def load(self) -> dict:
+        print("Parsando JSON...")
+        return {"objects": 200, "nested": True}
 
-# Ambas funcionan sin herencia explícita
-process_data(SimpleCSVLoader())
-process_data(APILoader())
 
 # %% [markdown]
-# Protocol es como "duck typing con type hints": si camina como DataLoader y
-# suena como DataLoader, Python lo trata como DataLoader.
+# ### Usando Protocol: Función que acepta cualquier "cargador"
+
+# %%
+def process_data(loader: DataLoader) -> None:
+    """Acepta CUALQUIER objeto que tenga método load()."""
+    print("\n--- Procesando datos ---")
+    data = loader.load()
+    print(f"✓ Datos cargados: {len(data)} items")
+    print(f"  Contenido: {data}\n")
+
+
+# Protocol funciona sin herencia explícita - "duck typing"
+print("Ejemplo 1: CSV")
+csv_loader = SimpleCSVLoader()
+process_data(csv_loader)
+
+print("Ejemplo 2: Base de datos")
+db_loader = DatabaseLoader()
+process_data(db_loader)
+
+print("Ejemplo 3: JSON")
+json_loader = JSONFileLoader()
+process_data(json_loader)
+
+# %% [markdown]
+# ### Protocol vs Herencia: Cuándo Usar Cada Uno
+#
+# | Aspecto | Herencia (`ABC`) | Protocol |
+# |---------|------------------|----------|
+# | Necesita `class Foo(Base)` | Sí, obligatorio | No, automático |
+# | Relación "es un" | Sí | No necesaria |
+# | Flexibilidad | Limitada (árbol fijo) | Alta (cualquier clase funciona) |
+# | Type hints mejores | Sí | Sí, además sin acoplamiento |
+# | Mejor para datos reales | No | Sí |
+
+# %% [markdown]
+# ### Ejemplo Real: Sistema de Almacenamiento Flexible
+#
+# Imagina que tienes diferentes formas de guardar datos.
+# Con Protocol, tu código no necesita saber cuál es.
+
+# %%
+class FileStorage:
+    """Guarda en archivo."""
+
+    def save(self, data: dict, filename: str) -> None:
+        print(f"✓ Guardado en archivo: {filename}")
+
+
+class CloudStorage:
+    """Guarda en la nube."""
+
+    def save(self, data: dict, filename: str) -> None:
+        print(f"✓ Guardado en nube: {filename}")
+
+
+class DatabaseStorage:
+    """Guarda en base de datos."""
+
+    def save(self, data: dict, filename: str) -> None:
+        print(f"✓ Guardado en DB: {filename}")
+
+
+# Protocol para la interfaz
+class Storage(Protocol):
+    """Cualquier cosa que pueda guardar datos."""
+
+    def save(self, data: dict, filename: str) -> None:
+        ...
+
+
+# Tu aplicación acepta CUALQUIER tipo de storage
+def backup_user_data(storage: Storage, user_data: dict) -> None:
+    """Hace backup sin importar dónde se guarde."""
+    print(f"Haciendo backup de {len(user_data)} campos...")
+    storage.save(user_data, "user_backup")
+
+
+# Funciona con todos, sin modificar backup_user_data
+print("\n--- Sistema de Backup Flexible ---")
+backup_user_data(FileStorage(), {"name": "Ana", "email": "ana@ex.com"})
+backup_user_data(CloudStorage(), {"name": "Luis", "email": "luis@ex.com"})
+backup_user_data(DatabaseStorage(), {"name": "Marta", "email": "marta@ex.com"})
+
+# %% [markdown]
+# ### Resumen: Protocol
+#
+# **Protocol** es "duck typing con seguridad de tipos":
+# - Si cammina como un pato 🦆
+# - Y suena como un pato 🦆
+# - Python lo trata como un pato 🦆
+#
+# **Ventajas:**
+# - ✓ Sin herencia incómoda
+# - ✓ Flexible - cualquier clase funciona
+# - ✓ Type hints sin acoplamiento
+# - ✓ Mejor para datos reales que varían
+#
+# **Cuándo usar:**
+# - Tienes múltiples clases con métodos similares
+# - No quieres dependencias de herencia
+# - Quieres type hints pero flexibilidad
 
 # %% [markdown]
 # ## Resumen
