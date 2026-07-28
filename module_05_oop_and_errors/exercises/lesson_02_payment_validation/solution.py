@@ -1,12 +1,45 @@
-class PaymentValidationError(Exception):
-    pass
+class PaymentError(ValueError):
+    """Excepción personalizada para errores de pago con contexto."""
+
+    def __init__(self, amount: float, reason: str) -> None:
+        self.amount = amount
+        self.reason = reason
+        message = f"Payment validation failed: amount={amount} - {reason}"
+        super().__init__(message)
 
 
 def validate_payment(amount: float) -> float:
+    """Valida que el monto de pago sea válido.
+
+    Validaciones:
+    - amount > 0
+    - amount <= 10000
+
+    Retorna el monto si es válido.
+    Levanta PaymentError si no es válido.
+    """
     if amount <= 0:
-        raise PaymentValidationError("amount must be positive")
+        raise PaymentError(amount, "amount must be positive")
+    if amount > 10000:
+        raise PaymentError(amount, "amount exceeds maximum of $10000")
     return amount
 
 
+def process_payment(amount: float) -> str:
+    """Procesa un pago con manejo de errores.
+
+    Intenta validar el pago. Si es válido, retorna mensaje de éxito.
+    Si falla, retorna mensaje de error con la razón.
+    """
+    try:
+        validate_payment(amount)
+        return f"Payment processed: ${amount}"
+    except PaymentError as error:
+        return f"Payment failed: {error.reason}"
+
+
 if __name__ == "__main__":
-    print(validate_payment(99.9))
+    print(process_payment(100))      # Payment processed: $100
+    print(process_payment(-50))      # Payment failed: amount must be positive
+    print(process_payment(15000))    # Payment failed: amount exceeds maximum of $10000
+    print(process_payment(5000))     # Payment processed: $5000
