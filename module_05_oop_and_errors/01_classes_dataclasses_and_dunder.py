@@ -3,16 +3,89 @@
 #
 # ## Objetivos
 #
-# - Modelar entidades simples con clases.
-# - Reducir ruido con `@dataclass`.
+# - Entender clases: el blueprint para objetos
+# - Usar atributos (state) y métodos (behavior)
+# - Comprender `__init__` constructor
+# - Reducir código repetitivo con `@dataclass`
 
 # %%
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
+# %% [markdown]
+# ## ¿Por qué clases?
+#
+# Las clases agrupan datos relacionados (atributos) con funciones que operan
+# en esos datos (métodos). Esto es **encapsulación** - bundling data with code.
+
+# %% [markdown]
+# ## Clases Básicas: Atributos y Métodos
+
+# %%
+# Un ejemplo simple sin clases:
+student_name = "Ana"
+student_email = "ana@example.com"
+
+def print_student_info(name, email):
+    print(f"{name} ({email})")
+
+print_student_info(student_name, student_email)
+
+# %% [markdown]
+# ### Con una clase: agrupamos datos y comportamiento
+
+# %%
+class Student:
+    """Un estudiante con nombre y email."""
+
+    def set_info(self, name: str, email: str) -> None:
+        self.name = name
+        self.email = email
+
+    def print_info(self) -> None:
+        print(f"{self.name} ({self.email})")
+
+
+student = Student()
+student.set_info("Ana", "ana@example.com")
+student.print_info()
+
+# %% [markdown]
+# ### El Constructor (`__init__`)
+#
+# El constructor inicializa atributos cuando se crea el objeto.
+# Se llama automáticamente al instanciar la clase.
+
+# %%
+class Student:
+    """Un estudiante con nombre y email."""
+
+    def __init__(self, name: str, email: str) -> None:
+        """Inicializa el estudiante con nombre y email."""
+        self.name = name
+        self.email = email
+
+    def print_info(self) -> None:
+        print(f"{self.name} ({self.email})")
+
+
+# Ahora los datos se inicializan automáticamente
+student1 = Student("Ana", "ana@example.com")
+student2 = Student("Luis", "luis@example.com")
+
+student1.print_info()
+student2.print_info()
+
+# %% [markdown]
+# ## `@dataclass`: Simplificando el Constructor
+#
+# Escribir `__init__` es repetitivo cuando solo inicializas atributos.
+# El decorador `@dataclass` genera el `__init__` automáticamente.
+
 
 @dataclass
 class Lesson:
+    """Una lección con título y duración."""
     title: str
     duration_minutes: int
     published: bool = False
@@ -21,39 +94,73 @@ class Lesson:
         self.published = True
 
 
+# `@dataclass` genera automáticamente:
+# def __init__(self, title: str, duration_minutes: int, published: bool = False)
 lesson = Lesson("Archivos con pathlib", 45)
 print(lesson)
 lesson.publish()
 print(lesson)
 
 # %% [markdown]
-# ## Métodos especiales
+# ## Métodos Especiales (Dunder Methods)
+#
+# Python llama automáticamente a ciertos métodos especiales en situaciones específicas.
+# Se reconocen por el prefijo y sufijo `__` (dunder = double underscore).
 
 
 # %%
 class Cohort:
-    def __init__(self, name: str, students: list[str]):
+    """Una cohorte de estudiantes."""
+
+    def __init__(self, name: str, students: list[str]) -> None:
         self.name = name
         self.students = students
 
-    def __len__(self) -> int:
-        return len(self.students)
-
     def __repr__(self) -> str:
+        """Representa el objeto como string (para debugging)."""
         return f"Cohort(name={self.name!r}, students={self.students!r})"
+
+    def __len__(self) -> int:
+        """Permite usar len(cohort)."""
+        return len(self.students)
 
 
 cohort = Cohort("Noche", ["Ana", "Luis", "Marta"])
-print(cohort)
-print(len(cohort))
+print(cohort)  # Llama a __repr__
+print(len(cohort))  # Llama a __len__
+
+# %% [markdown]
+# ### Métodos Especiales Comunes
+#
+# | Método | Cuándo se llama | Ejemplo |
+# |--------|-----------------|---------|
+# | `__init__` | Al crear un objeto | `obj = MyClass()` |
+# | `__repr__` | Al hacer print() o en el REPL | `print(obj)` |
+# | `__len__` | Al usar len() | `len(obj)` |
+# | `__str__` | Cuando necesitas string legible | `str(obj)` |
+# | `__eq__` | Al comparar con == | `obj1 == obj2` |
+#
+# Con `@dataclass`, se generan automáticamente `__init__` y `__repr__`:
+
+# %%
+@dataclass
+class SimpleLesson:
+    """@dataclass genera __init__ y __repr__ automáticamente."""
+    title: str
+    duration: int
+
+
+lesson = SimpleLesson("OOP", 90)
+print(lesson)  # __repr__ automático
+# SimpleLesson(title='OOP', duration=90)
 
 # %% [markdown]
 # ## Herencia vs Composición
 #
-# ### El Problema: Herencia para todo
+# ### El Problema: Herencia profunda
 #
-# La herencia es tentadora, pero causa problemas en objetos de datos cuando necesitas
-# combinar comportamientos. En ingeniería de datos, composición es casi siempre mejor.
+# La herencia funciona bien para relaciones "es un", pero cuando necesitas combinar
+# comportamientos de múltiples clases, la herencia profunda se vuelve problemática.
 
 # %%
 # Anti-patrón: herencia profunda
@@ -106,9 +213,9 @@ class Cache:
 
 
 class DataReader:
-    """Lee datos de una fuente con caché opcional."""
+    """Lee datos de una fuente, opcionalmente con caché."""
 
-    def __init__(self, source: DataSource, cache: Cache | None = None):
+    def __init__(self, source: DataSource, cache: Cache | None = None) -> None:
         self.source = source
         self.cache = cache
 
@@ -129,7 +236,7 @@ class DataReader:
         return data
 
 
-# Uso: flexible y sin múltiple herencia
+# La composición es flexible: mismo código funciona con cualquier DataSource
 csv_source = CSVSource("data.csv")
 cache = Cache()
 reader = DataReader(csv_source, cache)
@@ -137,10 +244,10 @@ reader = DataReader(csv_source, cache)
 print(reader.read("csv_data"))  # Lee de fuente
 print(reader.read("csv_data"))  # Desde caché
 
-# Ahora es trivial agregar otra fuente o usar sin caché
+# Funciona con otras fuentes sin cambiar DataReader
 json_source = JSONSource("https://api.example.com/data")
-reader_no_cache = DataReader(json_source)
-print(reader_no_cache.read())
+reader_json = DataReader(json_source, cache)
+print(reader_json.read("api_data"))
 
 # %% [markdown]
 # ### Cuándo Usar Cada Uno
@@ -153,6 +260,8 @@ print(reader_no_cache.read())
 # %% [markdown]
 # ## Resumen
 #
-# - `dataclass` es excelente para modelos de datos.
-# - Los métodos especiales mejoran la integración con Python.
-# - **Prefer composición sobre herencia para objetos de datos.**
+# - **Clases** agrupan datos (atributos) y funciones (métodos) - encapsulación
+# - **`__init__`** inicializa atributos cuando se crea el objeto
+# - **`@dataclass`** genera automáticamente `__init__` y `__repr__` para reducir código
+# - **Métodos especiales** (`__repr__`, `__len__`, etc.) integran objetos con Python
+# - **Composición** es más flexible que herencia para combinar comportamientos
