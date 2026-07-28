@@ -19,7 +19,7 @@ Improve course content for technical students by embedding real-world concepts, 
 
 ### Context
 - **Target Audience:** Intermediate-level technical students
-- **Duration:** 7 modules (Module 0 → Module 6)
+- **Duration:** 7 modules (Module 0 -> Module 6)
 - **Teaching Approach:** Practical, scenario-driven, with data engineering context
 - **Python Version:** 3.12 (use modern features: match statements, f-strings, type hints, dataclasses)
 
@@ -83,7 +83,7 @@ Improve course content for technical students by embedding real-world concepts, 
 
 ### Notebooks
 - Auto-generated from Python files using `tools/build_notebooks.py`
-- Recommended learning flow: Script → Notebook → Exercises
+- Recommended learning flow: Script -> Notebook -> Exercises
 
 ---
 
@@ -108,13 +108,13 @@ Each improvement session:
 5. **Commit:** Add improvements with descriptive commit messages
 
 ### High-Priority Improvements (Start Here)
-1. Module 0 → Data structure performance
-2. Module 1 → Shallow copy trap
-3. Module 2 → Walrus operator, match statements
-4. Module 3 → Generator expressions
-5. Module 4 → Streaming files, encoding
-6. Module 5 → Custom exceptions with context
-7. Module 6 → SQL injection, transactions
+1. Module 0 -> Data structure performance
+2. Module 1 -> Shallow copy trap
+3. Module 2 -> Walrus operator, match statements
+4. Module 3 -> Generator expressions
+5. Module 4 -> Streaming files, encoding
+6. Module 5 -> Custom exceptions with context
+7. Module 6 -> SQL injection, transactions
 
 ---
 
@@ -134,6 +134,7 @@ Always include real-world context like:
 - **No unnecessary comments:** Let good naming speak for itself
 - **Modern Python:** Use 3.12 features (match, walrus, f-strings, dataclasses)
 - **Error handling:** Show how to fail gracefully
+- **No special characters or emojis in code:** Avoid visual markers like checkmarks (✓), X marks (✗), arrow marks (→), or emoji indicators (❌, ✅) in code and comments. Use clear textual descriptions instead.
 
 ### Examples Should Show
 1. **The problem:** What goes wrong without the pattern
@@ -142,11 +143,11 @@ Always include real-world context like:
 4. **The trade-off:** When this approach matters (performance, readability, safety)
 
 ### What NOT to Do
-- ❌ Don't add premature abstractions
-- ❌ Don't include features beyond the lesson scope
-- ❌ Don't use outdated patterns (old-style classes, os.path instead of pathlib)
-- ❌ Don't skip error cases ("assume valid input")
-- ❌ Don't hardcode values (use configurable examples)
+-  Don't add premature abstractions
+-  Don't include features beyond the lesson scope
+-  Don't use outdated patterns (old-style classes, os.path instead of pathlib)
+-  Don't skip error cases ("assume valid input")
+-  Don't hardcode values (use configurable examples)
 
 ---
 
@@ -161,7 +162,7 @@ Always include real-world context like:
 ### Making Changes
 1. Edit the appropriate lesson file (`module_XX_*/XX_*.py`)
 2. Add markdown sections with clear learning objectives
-3. Include problem → solution → real scenario pattern
+3. Include problem -> solution -> real scenario pattern
 4. Test all code examples: `uv run python -m module_XX_...`
 5. Update exercises if needed to reflect new content
 
@@ -299,14 +300,14 @@ Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>
 ## Success Criteria
 
 A lesson is ready when:
-1. ✅ Code examples all run without errors
-2. ✅ Concepts are tied to real data scenarios
-3. ✅ Students understand the "why" before the "how"
-4. ✅ Performance or safety trade-offs are explained
-5. ✅ Exercises can be solved with lesson knowledge
-6. ✅ No unnecessary abstractions or premature optimization
-7. ✅ Type hints used throughout
-8. ✅ Modern Python 3.12 patterns applied
+1.  Code examples all run without errors
+2.  Concepts are tied to real data scenarios
+3.  Students understand the "why" before the "how"
+4.  Performance or safety trade-offs are explained
+5.  Exercises can be solved with lesson knowledge
+6.  No unnecessary abstractions or premature optimization
+7.  Type hints used throughout
+8.  Modern Python 3.12 patterns applied
 
 ---
 
