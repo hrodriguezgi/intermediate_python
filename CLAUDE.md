@@ -134,7 +134,7 @@ Always include real-world context like:
 - **No unnecessary comments:** Let good naming speak for itself
 - **Modern Python:** Use 3.12 features (match, walrus, f-strings, dataclasses)
 - **Error handling:** Show how to fail gracefully
-- **No special characters or emojis in code:** Avoid visual markers like checkmarks (✓), X marks (✗), arrow marks (→), or emoji indicators (❌, ✅) in code and comments. Use clear textual descriptions instead.
+- **No special characters or emojis in code:** Avoid visual markers like checkmarks (), X marks (✗), arrow marks (→), or emoji indicators (❌, ✅) in code and comments. Use clear textual descriptions instead.
 
 ### Examples Should Show
 1. **The problem:** What goes wrong without the pattern
