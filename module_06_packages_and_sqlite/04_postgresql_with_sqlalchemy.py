@@ -31,8 +31,8 @@
 # brew services start postgresql
 #
 # # Crear usuario y base de datos
-# createdb inventory
-# createuser -P inventory_user  # Te pide contraseña
+# createdb python
+# createuser -P python  # Te pide contraseña
 # ```
 
 # %%
@@ -50,12 +50,12 @@ from sqlalchemy.pool import QueuePool
 # Format: `postgresql://usuario:contraseña@host:puerto/base_datos`
 
 # %%
-# Configuración - CAMBIAR estos valores según tu instalación
-POSTGRES_USER = "inventory_user"
-POSTGRES_PASSWORD = "your_password"  # TODO: Cambiar a tu contraseña
+# Configuración para tu instalación local
+POSTGRES_USER = "python"
+POSTGRES_PASSWORD = "python2026"
 POSTGRES_HOST = "localhost"
 POSTGRES_PORT = 5432
-POSTGRES_DB = "inventory"
+POSTGRES_DB = "python"
 
 # Construir URL de conexión
 DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
