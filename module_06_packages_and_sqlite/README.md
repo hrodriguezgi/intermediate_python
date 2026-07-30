@@ -33,6 +33,17 @@ Manejo de datos persistentes con bases de datos reales en Python.
 
 **Aprendes:** Análisis rápido de datos, elección de herramienta correcta
 
+### 04. PostgreSQL con SQLAlchemy
+**Temas:** Bases de datos empresariales, conexiones en red, producción
+- PostgreSQL vs SQLite: cuándo usar cada una
+- Connection pooling para múltiples conexiones concurrentes
+- Transacciones en servidor real
+- Error handling específico de PostgreSQL
+- Queries avanzadas (JOINs, agregaciones, funciones)
+- Setup en Mac con Homebrew
+
+**Aprendes:** Conectar a bases de datos de producción, escalabilidad
+
 ## Ejercicios
 
 - `exercises/lesson_01_course_package/` - Estructura de paquetes
@@ -55,6 +66,10 @@ python -m module_06_packages_and_sqlite.02_sqlite_with_sqlalchemy
 
 # Lesson 3: DuckDB analytics
 python -m module_06_packages_and_sqlite.03_duckdb_for_analytics
+
+# Lesson 4: PostgreSQL (requiere PostgreSQL instalado)
+# ANTES: Cambiar POSTGRES_PASSWORD en el archivo
+python -m module_06_packages_and_sqlite.04_postgresql_with_sqlalchemy
 ```
 
 ## Concepto Clave
@@ -71,6 +86,19 @@ python -m module_06_packages_and_sqlite.03_duckdb_for_analytics
 ```
 sqlalchemy>=2.0
 duckdb>=0.8
+psycopg2-binary>=2.9  # Para PostgreSQL
+```
+
+**Instalación en Mac:**
+```bash
+# PostgreSQL server
+brew install postgresql@16
+brew services start postgresql@16
+
+# Python driver
+pip install psycopg2-binary
+# O con uv
+uv pip install psycopg2-binary
 ```
 
 ## Siguiente
