@@ -1,4 +1,4 @@
-from module_06_packages_and_sqlite.shared.text_tools import slugify
+from module_06_databases_and_orm.shared.text_tools import slugify
 
 
 def build_module_names(names: list[str]) -> list[str]:
