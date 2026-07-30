@@ -218,6 +218,7 @@ class APILoader(LoaderBase):
 # Protocol dice: "Si un objeto tiene estos métodos, lo considero compatible,
 # sin necesidad de herencia explícita."
 
+
 # %%
 # Con Protocol: no necesitas heredar, solo tener los métodos correctos
 class DataLoader(Protocol):
@@ -256,12 +257,13 @@ class JSONFileLoader:
 # %% [markdown]
 # ### Usando Protocol: Función que acepta cualquier "cargador"
 
+
 # %%
 def process_data(loader: DataLoader) -> None:
     """Acepta CUALQUIER objeto que tenga método load()."""
     print("\n--- Procesando datos ---")
     data = loader.load()
-    print(f"✓ Datos cargados: {len(data)} items")
+    print(f" Datos cargados: {len(data)} items")
     print(f"  Contenido: {data}\n")
 
 
@@ -279,50 +281,39 @@ json_loader = JSONFileLoader()
 process_data(json_loader)
 
 # %% [markdown]
-# ### Protocol vs Herencia: Cuándo Usar Cada Uno
-#
-# | Aspecto | Herencia (`ABC`) | Protocol |
-# |---------|------------------|----------|
-# | Necesita `class Foo(Base)` | Sí, obligatorio | No, automático |
-# | Relación "es un" | Sí | No necesaria |
-# | Flexibilidad | Limitada (árbol fijo) | Alta (cualquier clase funciona) |
-# | Type hints mejores | Sí | Sí, además sin acoplamiento |
-# | Mejor para datos reales | No | Sí |
-
-# %% [markdown]
 # ### Ejemplo Real: Sistema de Almacenamiento Flexible
 #
 # Imagina que tienes diferentes formas de guardar datos.
 # Con Protocol, tu código no necesita saber cuál es.
+
 
 # %%
 class FileStorage:
     """Guarda en archivo."""
 
     def save(self, data: dict, filename: str) -> None:
-        print(f"✓ Guardado en archivo: {filename}")
+        print(f" Guardado en archivo: {filename}")
 
 
 class CloudStorage:
     """Guarda en la nube."""
 
     def save(self, data: dict, filename: str) -> None:
-        print(f"✓ Guardado en nube: {filename}")
+        print(f" Guardado en nube: {filename}")
 
 
 class DatabaseStorage:
     """Guarda en base de datos."""
 
     def save(self, data: dict, filename: str) -> None:
-        print(f"✓ Guardado en DB: {filename}")
+        print(f" Guardado en DB: {filename}")
 
 
 # Protocol para la interfaz
 class Storage(Protocol):
     """Cualquier cosa que pueda guardar datos."""
 
-    def save(self, data: dict, filename: str) -> None:
-        ...
+    def save(self, data: dict, filename: str) -> None: ...
 
 
 # Tu aplicación acepta CUALQUIER tipo de storage
@@ -339,18 +330,29 @@ backup_user_data(CloudStorage(), {"name": "Luis", "email": "luis@ex.com"})
 backup_user_data(DatabaseStorage(), {"name": "Marta", "email": "marta@ex.com"})
 
 # %% [markdown]
+# ### Protocol vs Herencia: Cuándo Usar Cada Uno
+#
+# | Aspecto | Herencia (`ABC`) | Protocol |
+# |---------|------------------|----------|
+# | Necesita `class Foo(Base)` | Sí, obligatorio | No, automático |
+# | Relación "es un" | Sí | No necesaria |
+# | Flexibilidad | Limitada (árbol fijo) | Alta (cualquier clase funciona) |
+# | Type hints mejores | Sí | Sí, además sin acoplamiento |
+# | Mejor para datos reales | No | Sí |
+
+# %% [markdown]
 # ### Resumen: Protocol
 #
 # **Protocol** es "duck typing con seguridad de tipos":
-# - Si cammina como un pato 🦆
-# - Y suena como un pato 🦆
-# - Python lo trata como un pato 🦆
+# - Si cammina como un pato
+# - Y suena como un pato
+# - Python lo trata como un pato
 #
 # **Ventajas:**
-# - ✓ Sin herencia incómoda
-# - ✓ Flexible - cualquier clase funciona
-# - ✓ Type hints sin acoplamiento
-# - ✓ Mejor para datos reales que varían
+# -  Sin herencia incómoda
+# -  Flexible - cualquier clase funciona
+# -  Type hints sin acoplamiento
+# -  Mejor para datos reales que varían
 #
 # **Cuándo usar:**
 # - Tienes múltiples clases con métodos similares

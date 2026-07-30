@@ -61,7 +61,7 @@ student.print_info()
 
 
 # %%
-class Student:
+class Student2:
     """Un estudiante con nombre y email."""
 
     def __init__(self, name: str, email: str) -> None:
@@ -173,6 +173,9 @@ print(lesson)  # __repr__ automático
 # %%
 # Anti-patrón: herencia profunda
 class DataSource(ABC):
+    def __init__(self, name):
+        self.name = name
+
     @abstractmethod
     def read(self) -> dict:
         pass
