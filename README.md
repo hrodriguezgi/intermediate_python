@@ -35,7 +35,7 @@ intermediate_python/
 ├── module_03_functions_and_functional_programming/
 ├── module_04_files_serialization_and_paths/
 ├── module_05_oop_and_errors/
-├── module_06_packages_and_sqlite/       (Databases: SQLite & DuckDB)
+├── module_06_databases_and_orm/       (SQLAlchemy ORM: SQLite, DuckDB, PostgreSQL)
 ├── module_07_fastapi/                   (FastAPI: REST APIs)
 └── final_project/                       (Capstone: Complete application)
 ```
@@ -99,10 +99,11 @@ Este curso enfatiza situaciones que encontrarás en producción:
 - **Module 4:** Files, CSV, JSON, encoding, streaming
 - **Module 5:** OOP, dataclasses, custom exceptions
 
-### Módulo 6: Databases (SQLite & DuckDB)
+### Módulo 6: Databases and ORM (SQLAlchemy)
 - **Lesson 1:** SQLAlchemy ORM fundamentals
 - **Lesson 2:** SQLite transactions, ACID, security, error handling
 - **Lesson 3:** DuckDB analytics (in-memory SQL, 10-100x faster)
+- **Lesson 4:** PostgreSQL production database (connection pooling, multiple writers)
 
 ### Módulo 7: FastAPI
 - **Lesson 1:** REST endpoints, type hints, Swagger UI
@@ -143,9 +144,9 @@ uv run python tools/validate_course.py
 uv run python -m module_00_python_refresh.01_data_types_and_variables
 uv run python -m module_01_pythonic_foundations.01_data_model_and_unpacking
 uv run python -m module_04_files_serialization_and_paths.01_pathlib_and_text_files
-uv run python -m module_06_packages_and_sqlite.01_sqlalchemy_fundamentals
-uv run python -m module_06_packages_and_sqlite.02_sqlite_with_sqlalchemy
-uv run python -m module_06_packages_and_sqlite.03_duckdb_for_analytics
+uv run python -m module_06_databases_and_orm.01_sqlalchemy_fundamentals
+uv run python -m module_06_databases_and_orm.02_sqlite_with_sqlalchemy
+uv run python -m module_06_databases_and_orm.03_duckdb_for_analytics
 
 # Run Final Project
 cd final_project
