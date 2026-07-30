@@ -19,7 +19,7 @@ This document outlines improvements for each module, organized by priority and i
 ## Module 0 · Python Refresh
 
 ### Current State
-✅ Covers types, variables, truthy/falsy, basic data structures, simple queue/stack.
+ Covers types, variables, truthy/falsy, basic data structures, simple queue/stack.
 
 ### Real-World Gaps
 
@@ -38,8 +38,8 @@ large_set = set(range(1000000))
 ```
 
 **Real-world scenario:** ETL pipeline processing 10M records, checking if ID exists:
-- Using list + `in` → minutes
-- Using set + `in` → milliseconds
+- Using list + `in` -> minutes
+- Using set + `in` -> milliseconds
 
 **What to add:**
 - Section: "Choosing the right structure"
@@ -111,7 +111,7 @@ data = {
 ## Module 1 · Pythonic Foundations
 
 ### Current State
-✅ Data model, mutability, unpacking, enumerate, zip, dict merge are solid.
+ Data model, mutability, unpacking, enumerate, zip, dict merge are solid.
 
 ### Real-World Gaps
 
@@ -201,7 +201,7 @@ print(merged)  # Order preserved, later values override
 ## Module 2 · Control Flow & Comprehensions
 
 ### Current State
-✅ Basic control flow, comprehensions, generators covered.
+Basic control flow, comprehensions, generators covered.
 
 ### Real-World Gaps
 
@@ -319,7 +319,7 @@ match event:
 ## Module 3 · Functions & Decorators
 
 ### Current State
-✅ Pure functions, decorators covered. Missing practical patterns for data processing.
+ Pure functions, decorators covered. Missing practical patterns for data processing.
 
 ### Real-World Gaps
 
@@ -519,7 +519,7 @@ You're loading entire files, which fails on big data.
 **The Problem:**
 ```python
 # Your current code
-content = LOG_PATH.read_text()  # 10GB file → crashes
+content = LOG_PATH.read_text()  # 10GB file -> crashes
 
 # Real scenario: process 100GB log file
 for line in LOG_PATH.open(encoding="utf-8"):
@@ -743,19 +743,19 @@ Different errors should be raised for different problems.
 ```python
 # All these use Exception, but different semantics
 
-# Bad input (user/data error) → ValueError
+# Bad input (user/data error) -> ValueError
 if not isinstance(count, int):
     raise ValueError("count must be integer")
 
-# Programming mistake (developer error) → TypeError
+# Programming mistake (developer error) -> TypeError
 if callback is not None and not callable(callback):
     raise TypeError("callback must be callable")
 
-# Domain logic violated (business logic error) → custom exception
+# Domain logic violated (business logic error) -> custom exception
 if balance < amount:
     raise InsufficientFundsError(f"balance={balance}, amount={amount}")
 
-# Should never happen (bug) → RuntimeError
+# Should never happen (bug) -> RuntimeError
 if state not in ["open", "closed", "pending"]:
     raise RuntimeError(f"Invalid state: {state}")
 ```
@@ -841,7 +841,7 @@ Never mentioned, but critical for production decisions.
 
 # Real mistake:
 # Web app with SQLite and uWSGI workers
-# Multiple processes → writer lock contention → timeouts
+# Multiple processes -> writer lock contention -> timeouts
 ```
 
 **What to add:**
