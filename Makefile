@@ -41,6 +41,7 @@ clean:
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
 	find . -type f -name "*.pyo" -delete
+	find . -type f -name "*.DS_Store" -delete
 	rm -rf .pytest_cache .mypy_cache .ruff_cache htmlcov/ dist/ build/ *.egg-info/
 
 docker-build:
