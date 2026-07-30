@@ -236,27 +236,27 @@ curl -X POST http://localhost:8000/sales \
 
 ## Success Indicators
 
-✅ CSV loads 20 products
-✅ Database file created with schema
-✅ SQLite populated with data
-✅ DuckDB analytics run successfully
-✅ FastAPI starts without errors
-✅ All CRUD endpoints work
-✅ Swagger UI displays correctly
-✅ Can test with curl/Postman
+ CSV loads 20 products
+ Database file created with schema
+ SQLite populated with data
+ DuckDB analytics run successfully
+ FastAPI starts without errors
+ All CRUD endpoints work
+ Swagger UI displays correctly
+ Can test with curl/Postman
 
 ## Learning Outcomes
 
 After completing this project, you'll be able to:
 
-- ✅ Build a complete data application from files to API
-- ✅ Load, validate, and transform CSV data
-- ✅ Use SQLite for transactional data
-- ✅ Use DuckDB for analytical queries
-- ✅ Create REST APIs with FastAPI
-- ✅ Implement proper error handling
-- ✅ Write type-safe Python code
-- ✅ Apply every module in practice
+-  Build a complete data application from files to API
+-  Load, validate, and transform CSV data
+-  Use SQLite for transactional data
+-  Use DuckDB for analytical queries
+-  Create REST APIs with FastAPI
+-  Implement proper error handling
+-  Write type-safe Python code
+-  Apply every module in practice
 
 ## Optional Enhancements
 

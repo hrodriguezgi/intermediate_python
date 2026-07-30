@@ -18,8 +18,8 @@ Crea un sistema de validación de pagos:
 
 2. **Función `validate_payment(amount: float) -> float`**
    Debe validar:
-   - `amount > 0` → Si no, levanta `PaymentError`
-   - `amount <= 10000` → Si excede, levanta `PaymentError`
+   - `amount > 0` -> Si no, levanta `PaymentError`
+   - `amount <= 10000` -> Si excede, levanta `PaymentError`
    - Si es válido, retorna el monto
 
 3. **Función `process_payment(amount: float) -> str`**

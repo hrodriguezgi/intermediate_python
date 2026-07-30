@@ -18,7 +18,7 @@ class Student:
     - __eq__(self, other) -> comparación con ==
     - __hash__() -> si frozen=True
 
-    Reducción de código repetitivo: 15 líneas → 5 líneas.
+    Reducción de código repetitivo: 15 líneas -> 5 líneas.
 
     Demuestra:
     - Type hints para atributos (name, email)

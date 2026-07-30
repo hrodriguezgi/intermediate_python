@@ -142,4 +142,4 @@ class ProductCreate(BaseModel):
 
 ## Siguiente
 
-→ Final Project: Aplicar todo lo aprendido en una aplicación completa
+ Final Project: Aplicar todo lo aprendido en una aplicación completa

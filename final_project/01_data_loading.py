@@ -8,10 +8,9 @@ Objetivos:
 - Información sobre el dataset
 """
 
-from pathlib import Path
 import csv
-from typing import List, Dict, Any
-
+from pathlib import Path
+from typing import Any, Dict, List
 
 BASE_DIR = Path(__file__).resolve().parent
 CSV_PATH = BASE_DIR / "data" / "products.csv"
@@ -86,7 +85,7 @@ if __name__ == "__main__":
 
     try:
         products = load_products_csv(CSV_PATH)
-        print(f"✓ Loaded {len(products)} products")
+        print(f" Loaded {len(products)} products")
 
         # Mostrar resumen
         print_data_summary(products)
@@ -97,6 +96,6 @@ if __name__ == "__main__":
             print(f"  {p}")
 
     except FileNotFoundError:
-        print(f"✗ File not found: {CSV_PATH}")
+        print(f" File not found: {CSV_PATH}")
     except Exception as e:
-        print(f"✗ Error: {e}")
+        print(f" Error: {e}")

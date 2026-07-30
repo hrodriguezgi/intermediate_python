@@ -1,0 +1,8 @@
+date,product,quantity,price,region
+2024-01-01,Laptop,2,1500,North
+2024-01-02,Mouse,50,25,South
+2024-01-03,Keyboard,30,75,East
+2024-01-04,Laptop,1,1500,West
+2024-01-05,Monitor,15,400,North
+2024-01-06,Mouse,100,25,South
+2024-01-07,Keyboard,40,75,East

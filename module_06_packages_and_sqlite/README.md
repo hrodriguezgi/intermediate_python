@@ -52,7 +52,7 @@ Manejo de datos persistentes con bases de datos reales en Python.
 ## Proyecto Final
 
 Ver `final_project/` en la raíz del curso:
-- Cargar CSV → Validar → SQLite → DuckDB → FastAPI
+- Cargar CSV -> Validar -> SQLite -> DuckDB -> FastAPI
 - Aplicar todo el módulo en contexto real
 
 ## Ejecutar
@@ -103,4 +103,4 @@ uv pip install psycopg2-binary
 
 ## Siguiente
 
-→ Module 07: FastAPI (Exponer datos vía API)
+ Module 07: FastAPI (Exponer datos vía API)

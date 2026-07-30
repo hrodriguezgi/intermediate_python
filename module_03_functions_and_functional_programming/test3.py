@@ -5,6 +5,7 @@ Permite aceptar cualquier cantidad de argumentos nombrados.
 Los argumentos se reciben como DICCIONARIO.
 """
 
+
 # Función que acepta cantidad variable de argumentos nombrados
 def var_kw_arguments(name: str, **kwargs: int):
     """
@@ -29,7 +30,7 @@ def var_kw_arguments2(name: str, age: int = 20, **kwargs: int):
     age: Opcional con valor por defecto 20
     **kwargs: Cantidad variable de argumentos nombrados
 
-    Orden: obligatorios → opcionales → **kwargs
+    Orden: obligatorios -> opcionales -> **kwargs
     """
     print(f"estoy ejecutando la función para {name}")
     print(type(kwargs))  # Diccionario

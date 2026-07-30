@@ -196,7 +196,7 @@ for user in users_cleaned:
 # Un decorador envuelve una función añadiendo funcionalidad:
 # logging, timing, validación, caché, etc.
 #
-# **Patrón:** función_original → decorador → función_mejorada
+# **Patrón:** función_original -> decorador -> función_mejorada
 
 
 # %%
@@ -309,7 +309,7 @@ def log_calls(function):
         all_args = ", ".join(filter(None, [args_str, kwargs_str]))
         print(f"{function.__name__}({all_args})")
         result = function(*args, **kwargs)
-        print(f"  → {result!r}")
+        print(f"  -> {result!r}")
         return result
 
     return wrapper

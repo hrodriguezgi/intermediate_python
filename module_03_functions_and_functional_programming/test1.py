@@ -8,6 +8,7 @@ Tipos:
 4. Argumentos opcionales con valor por defecto
 """
 
+
 # Función con argumentos obligatorios
 def say_hello(name: str, lastname: str) -> str:
     """Recibe nombre y apellido (ambos obligatorios)."""
@@ -32,7 +33,7 @@ def say_hello2(name: str, *subjects: str, age: int = 20) -> str:
     *subjects: Cantidad variable de materias (0 o más)
     age: Opcional, tiene valor por defecto 20
 
-    Orden de argumentos: obligatorios → *args → opcionales
+    Orden de argumentos: obligatorios -> *args -> opcionales
     """
     print("estoy ejecutando la función")
     return f"hola {name.capitalize()} las materias inscritas son: {subjects}, la edad es {age}"

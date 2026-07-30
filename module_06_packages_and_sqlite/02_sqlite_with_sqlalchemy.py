@@ -12,14 +12,14 @@
 # %% [markdown]
 # ## Cuándo usar SQLite
 #
-# ### ✅ Bueno para:
+# ###  Bueno para:
 # - Aplicaciones de usuario único (editor de notas, desktop app)
 # - Bases de datos embedded (datos en un archivo local)
 # - Desarrollo y testing
 # - Ciencia de datos (notebooks locales)
 # - SQLite requiere 0 configuración de servidor
 #
-# ### ❌ No es bueno para:
+# ###  No es bueno para:
 # - Aplicaciones web con múltiples usuarios concurrentes
 # - Solo permite 1 escritor a la vez (lock de base de datos)
 # - No es una base de datos de red (no es cliente-servidor)
@@ -28,11 +28,12 @@
 # **Regla:** Si más de 1 proceso escribe simultáneamente, usa PostgreSQL/MySQL.
 
 # %%
-from pathlib import Path
-from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, ForeignKey
-from sqlalchemy.orm import declarative_base, Session, relationship
-from sqlalchemy.exc import IntegrityError, OperationalError
 from datetime import datetime
+from pathlib import Path
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, create_engine
+from sqlalchemy.exc import IntegrityError, OperationalError
+from sqlalchemy.orm import Session, declarative_base, relationship
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "data" / "orders.db"
@@ -45,6 +46,7 @@ Base = declarative_base()
 # ## Modelos con relaciones
 #
 # SQLAlchemy gestiona relaciones entre tablas automáticamente.
+
 
 # %%
 class Customer(Base):
@@ -92,6 +94,7 @@ print(f"Database created: {DB_PATH.exists()}")
 # - Restar dinero de cuenta A
 # - Sumar dinero a cuenta B
 # - Si algo falla en el medio, ambas operaciones se revierten
+
 
 # %%
 def transfer_money(session: Session, from_id: int, to_id: int, amount: float):
@@ -166,11 +169,7 @@ with Session(engine) as session:
 # %%
 # Seguro: SQLAlchemy escapa la entrada automáticamente
 dangerous_input = "Ana'; DROP TABLE customers; --"
-result = (
-    session.query(Customer)
-    .filter(Customer.name == dangerous_input)
-    .all()
-)
+result = session.query(Customer).filter(Customer.name == dangerous_input).all()
 print(f"\nSearch for '{dangerous_input}': {len(result)} results (safe!)")
 
 # %% [markdown]
@@ -178,6 +177,7 @@ print(f"\nSearch for '{dangerous_input}': {len(result)} results (safe!)")
 #
 # IntegrityError: violación de restricciones (unique, foreign key, etc.)
 # OperationalError: errores operacionales (tabla no existe, permisos, etc.)
+
 
 # %%
 def add_customer_safe(session: Session, name: str, email: str) -> bool:
@@ -222,6 +222,7 @@ with Session(engine) as session:
 # ## Órdenes con transacción atómica
 #
 # Crear una orden implica múltiples cambios que deben ser atómicos.
+
 
 # %%
 def create_order_atomic(session: Session, customer_id: int, amount: float):
@@ -286,12 +287,7 @@ with Session(engine) as session:
     print(f"Average order: ${avg_order:.2f}")
 
     # Cantidad de órdenes por cliente
-    orders_per_customer = (
-        session.query(Customer.name, func.count(Order.id))
-        .outerjoin(Order)
-        .group_by(Customer.id)
-        .all()
-    )
+    orders_per_customer = session.query(Customer.name, func.count(Order.id)).outerjoin(Order).group_by(Customer.id).all()
     print("\nOrders per customer:")
     for name, count in orders_per_customer:
         print(f"  {name}: {count} orders")

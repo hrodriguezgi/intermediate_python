@@ -19,7 +19,7 @@ Crea un sistema de registro de tareas donde:
    - Método `add(task)`: Agrega una tarea
    - Método `pending_count()`: Retorna cantidad de tareas incompletas
    - Método `completed_count()`: Retorna cantidad de tareas completadas
-   - Implementa `__len__()` para usar `len(registry)` → total de tareas
+   - Implementa `__len__()` para usar `len(registry)` -> total de tareas
    - Implementa `__repr__()` para mostrar: `TaskRegistry(N tasks, M pending)`
 
 ## Restricciones

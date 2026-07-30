@@ -10,7 +10,7 @@ python 01_data_loading.py
 Should output:
 ```
 Loading data from .../products.csv...
-✓ Loaded 20 products
+ Loaded 20 products
 Total products: 20
 Categories: Electronics, Accessories, Furniture, Lighting
 Price range: $7.99 - $1299.99
@@ -48,7 +48,7 @@ python 03_sqlite_operations.py
 Should output:
 ```
 Loading products from CSV...
-✓ Loaded 20 products
+ Loaded 20 products
 
 Inserting into SQLite...
 Inserted 20 products (0 failed)
@@ -57,9 +57,9 @@ Verifying data...
 Total in database: 20
 
 Testing operations...
-✓ Product 1: Professional Laptop - $1299.99 (15 in stock)
-✓ Updated stock to 12
-✓ Sold 2 units, new stock: 13
+ Product 1: Professional Laptop - $1299.99 (15 in stock)
+ Updated stock to 12
+ Sold 2 units, new stock: 13
 ```
 
 ---

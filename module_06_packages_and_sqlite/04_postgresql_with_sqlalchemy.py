@@ -68,6 +68,7 @@ Base = declarative_base()
 # %% [markdown]
 # ## Modelos (idénticos a SQLite)
 
+
 # %%
 class Customer(Base):
     __tablename__ = "customers"
@@ -118,15 +119,16 @@ engine = create_engine(
 # Crear tablas
 try:
     Base.metadata.create_all(engine)
-    print("✓ Tables created successfully")
+    print(" Tables created successfully")
 except OperationalError as e:
-    print(f"✗ Database connection failed: {e}")
+    print(f" Database connection failed: {e}")
     print(f"  Make sure PostgreSQL is running and credentials are correct")
     exit(1)
 
 
 # %% [markdown]
 # ## Transacciones (igual que SQLite)
+
 
 # %%
 def transfer_money(session: Session, from_id: int, to_id: int, amount: float):
@@ -150,11 +152,11 @@ def transfer_money(session: Session, from_id: int, to_id: int, amount: float):
 
         # Ambas operaciones se cometen juntas
         session.commit()
-        print(f"✓ Transfer: ${amount} from {from_customer.name} to {to_customer.name}")
+        print(f" Transfer: ${amount} from {from_customer.name} to {to_customer.name}")
 
     except ValueError as e:
         session.rollback()
-        print(f"✗ Transfer failed: {e}")
+        print(f" Transfer failed: {e}")
         raise
 
 
@@ -167,7 +169,7 @@ with Session(engine) as session:
     session.query(Order).delete()
     session.query(Customer).delete()
     session.commit()
-    print("✓ Cleaned previous data")
+    print(" Cleaned previous data")
 
 # Crear nuevos clientes
 with Session(engine) as session:
@@ -178,7 +180,7 @@ with Session(engine) as session:
     ]
     session.add_all(customers)
     session.commit()
-    print(f"✓ Created {len(customers)} customers")
+    print(f" Created {len(customers)} customers")
 
 
 # %% [markdown]
@@ -199,26 +201,27 @@ with Session(engine) as session:
 # %% [markdown]
 # ## Manejo de errores PostgreSQL
 
+
 # %%
 def add_customer_safe(session: Session, name: str, email: str) -> bool:
     try:
         customer = Customer(name=name, email=email, balance=0.0)
         session.add(customer)
         session.commit()
-        print(f"✓ Customer '{name}' added")
+        print(f" Customer '{name}' added")
         return True
 
     except IntegrityError as e:
         session.rollback()
         if "unique constraint" in str(e).lower():
-            print(f"✗ Customer '{name}' or email '{email}' already exists")
+            print(f" Customer '{name}' or email '{email}' already exists")
         else:
-            print(f"✗ Integrity error: {e}")
+            print(f" Integrity error: {e}")
         return False
 
     except OperationalError as e:
         session.rollback()
-        print(f"✗ Database error: {e}")
+        print(f" Database error: {e}")
         return False
 
 
@@ -252,11 +255,7 @@ with Session(engine) as session:
 
     # Clientes con sus órdenes (JOIN)
     customer_orders = (
-        session.query(
-            Customer.name,
-            func.count(Order.id).label("order_count"),
-            func.sum(Order.amount).label("total_spent")
-        )
+        session.query(Customer.name, func.count(Order.id).label("order_count"), func.sum(Order.amount).label("total_spent"))
         .outerjoin(Order)
         .group_by(Customer.id)
         .all()
@@ -291,5 +290,3 @@ with Session(engine) as session:
 # - Datos críticos
 # - Escalabilidad requerida
 # - Team projects
-
-print("\n✓ PostgreSQL connection demo complete!")
