@@ -23,11 +23,11 @@ def safe_parse_bool(value, default: bool = False) -> bool:
     - If value is None, return default.
     - If value is already bool, return it.
     - If value is a string:
-      - "yes", "true", "1", "on" (case-insensitive) → True
-      - Other strings → False
+      - "yes", "true", "1", "on" (case-insensitive) -> True
+      - Other strings -> False
     - If value is a number:
-      - 0 → False
-      - Any other number → True
+      - 0 -> False
+      - Any other number -> True
     """
     if value is None:
         return default
@@ -116,6 +116,6 @@ if __name__ == "__main__":
     for user in users:
         try:
             parsed = parse_user_record(user)
-            print(f"  ✓ {parsed}")
+            print(f"   {parsed}")
         except ValueError as e:
-            print(f"  ✗ Error: {e}")
+            print(f"   Error: {e}")

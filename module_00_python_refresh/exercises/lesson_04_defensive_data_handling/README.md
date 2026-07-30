@@ -31,10 +31,10 @@ Implementa funciones de conversión defensivas en `starter.py`:
 
 ### 2. `safe_parse_bool(value, default: bool = False) -> bool`
 - Convierte `value` a booleano de forma segura.
-- `None` → `default`
-- Strings: `"yes"`, `"true"`, `"1"`, `"on"` → `True` (case-insensitive)
-- Otros strings → `False`
-- Numbers: 0 → `False`, cualquier otro → `True`
+- `None` -> `default`
+- Strings: `"yes"`, `"true"`, `"1"`, `"on"` -> `True` (case-insensitive)
+- Otros strings -> `False`
+- Numbers: 0 -> `False`, cualquier otro -> `True`
 
 ### 3. `parse_user_record(user_data: dict) -> dict`
 - Procesa un diccionario de usuario con tipos inconsistentes.
