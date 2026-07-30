@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "product_id": "1",
+      "name": "Keyboard",
+      "stock": "12",
+      "price": "35"
+    },
+    {
+      "product_id": "2",
+      "name": "Mouse",
+      "stock": "18",
+      "price": "20"
+    },
+    {
+      "product_id": "3",
+      "name": "Monitor",
+      "stock": "6",
+      "price": "180"
+    }
+  ],
+  "total_items": 3
+}

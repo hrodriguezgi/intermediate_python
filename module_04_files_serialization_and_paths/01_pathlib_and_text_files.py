@@ -70,6 +70,7 @@ print("UTF-8-sig ignora el BOM correctamente")
 # Sistemas antiguos usan latin-1, cp1252 u otros encodings.
 # Leer con UTF-8 falla con caracteres acentuados.
 
+
 # %%
 # Patrón: fallback graceful (intenta UTF-8, luego latin-1)
 def read_file_safe(path: Path) -> str:
@@ -84,6 +85,7 @@ def read_file_safe(path: Path) -> str:
 
     raise ValueError(f"No se pudo decodificar {path} con ningún encoding conocido")
 
+
 content = read_file_safe(LOG_PATH)
 print(f"Lectura exitosa con fallback: {len(content)} caracteres")
 
@@ -92,6 +94,7 @@ print(f"Lectura exitosa con fallback: {len(content)} caracteres")
 #
 # Para casos difíciles, usa `chardet` (requiere instalación).
 # En datos ETL, esto ahorra horas de debugging.
+
 
 # %%
 # Simulación sin instalar chardet (solo concepto)
@@ -104,6 +107,7 @@ def detect_encoding(path: Path) -> str:
     print("Concepto: chardet.detect() retorna el encoding detectado")
     return "utf-8"
 
+
 # En producción:
 # detected = detect_encoding(LOG_PATH)
 # content = LOG_PATH.read_text(encoding=detected)
@@ -114,7 +118,7 @@ def detect_encoding(path: Path) -> str:
 # Nunca hagas esto:
 
 # %%
-# ❌ INCORRECTO: El archivo podría quedar abierto si hay excepción
+#  INCORRECTO: El archivo podría quedar abierto si hay excepción
 f = LOG_PATH.open(encoding="utf-8")
 lines = f.readlines()
 # Si process() falla, f.close() nunca se ejecuta -> file handle leak
@@ -125,9 +129,9 @@ f.close()
 # `with` garantiza que el archivo se cierre **siempre**, incluso si hay excepciones.
 
 # %%
-# ✓ CORRECTO: El archivo se cierra automáticamente
+#  CORRECTO: El archivo se cierra automáticamente
 with LOG_PATH.open(encoding="utf-8") as f:
-    lines = f.readlines()
+    lines = f.readlines()  # read() readline() readlines()
 # Aquí el archivo ESTÁ CERRADO, incluso si process() falla
 print(f"Lectura segura: {len(lines)} líneas")
 
@@ -135,6 +139,7 @@ print(f"Lectura segura: {len(lines)} líneas")
 # ### Scenario real: Procesar millones de líneas
 #
 # Con `with`, puedes procesar línea por línea sin cargar todo en memoria.
+
 
 # %%
 # Iteración eficiente de un archivo grande
@@ -147,6 +152,7 @@ def process_log_stream(path: Path) -> int:
             if "ERROR" in line:
                 count += 1
     return count
+
 
 error_count = process_log_stream(LOG_PATH)
 print(f"Errores encontrados: {error_count}")

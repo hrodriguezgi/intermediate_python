@@ -22,6 +22,9 @@ DATA_DIR = BASE_DIR / "data"
 
 # %%
 csv_path = DATA_DIR / "products.csv"
+print(csv_path.exists())
+
+# %%
 with csv_path.open(encoding="utf-8") as csv_file:
     rows = list(csv.DictReader(csv_file))
 
@@ -40,8 +43,9 @@ print(rows)
 # %% [markdown]
 # ### Solución: Itera fila por fila
 
+
 # %%
-# ✓ CORRECTO: Procesa 1 fila a la vez, memoria constante
+#  CORRECTO: Procesa 1 fila a la vez, memoria constante
 def process_csv_stream(path: Path) -> int:
     """Procesa CSV línea por línea sin cargar en memoria."""
     total_items = 0
@@ -55,6 +59,7 @@ def process_csv_stream(path: Path) -> int:
 
     return total_items
 
+
 total = process_csv_stream(csv_path)
 print(f"Total procesado: {total} filas")
 
@@ -63,11 +68,12 @@ print(f"Total procesado: {total} filas")
 #
 # En ETL, típicamente transformas y guardas en otra fuente:
 
+
 # %%
 def etl_pipeline(csv_path: Path, output_path: Path) -> int:
     """Lee CSV grande, transforma, escribe sin cargar en memoria."""
     count = 0
-    with csv_path.open(encoding="utf-8") as infile:
+    with csv_path.open("r", encoding="utf-8") as infile:
         with output_path.open("w", encoding="utf-8") as outfile:
             reader = csv.DictReader(infile)
             writer = csv.DictWriter(outfile, fieldnames=reader.fieldnames)
@@ -77,7 +83,7 @@ def etl_pipeline(csv_path: Path, output_path: Path) -> int:
                 # Transforma
                 if "price" in row:
                     try:
-                        row["price"] = float(row["price"])
+                        row["price"] = float(row["price"]) / 2
                     except ValueError:
                         row["price"] = 0.0
                 # Escribe
@@ -85,6 +91,7 @@ def etl_pipeline(csv_path: Path, output_path: Path) -> int:
                 count += 1
 
     return count
+
 
 output_csv = DATA_DIR / "products_transformed.csv"
 processed = etl_pipeline(csv_path, output_csv)
@@ -113,7 +120,7 @@ with euro_path.open(encoding="utf-8") as f:
     wrong_rows = list(reader)
     print("Con comma (INCORRECTO):", wrong_rows[0])
 
-# ✓ CORRECTO: Especifica el delimitador
+#  CORRECTO: Especifica el delimitador
 with euro_path.open(encoding="utf-8") as f:
     reader = csv.DictReader(f, delimiter=";")
     correct_rows = list(reader)
@@ -133,6 +140,7 @@ with euro_path.open(encoding="utf-8") as f:
 # %% [markdown]
 # ### Encoding + Dialect juntos
 
+
 # %%
 # Encoding + dialect juntos (real scenario)
 def read_csv_flexible(path: Path, delimiter: str = ",", encoding: str = "utf-8"):
@@ -140,6 +148,7 @@ def read_csv_flexible(path: Path, delimiter: str = ",", encoding: str = "utf-8")
     with path.open(encoding=encoding) as f:
         reader = csv.DictReader(f, delimiter=delimiter)
         return list(reader)
+
 
 # Ejemplo: CSV tabulado con latin-1 encoding
 tab_path = DATA_DIR / "tab_separated.txt"
@@ -193,11 +202,13 @@ print(f"Parseado: {parsed['total_items']} items")
 # %% [markdown]
 # **Caso de uso:** APIs, logging, enviar por red
 
+
 # %%
 # Ejemplo: Respuesta de API
 def api_response(data: dict) -> str:
     """Retorna JSON como string para HTTP response."""
     return json.dumps(data, ensure_ascii=False)
+
 
 response = api_response(payload)
 print(f"API response: {response[:50]}...")
@@ -207,12 +218,13 @@ print(f"API response: {response[:50]}...")
 
 # %%
 # Guardar directamente a archivo
-json_path = DATA_DIR / "products.json"
-with json_path.open("w", encoding="utf-8") as f:
-    json.dump(payload, f, ensure_ascii=False, indent=2)
+json_path = DATA_DIR / "products2.json"
+with json_path.open("w", encoding="utf-8") as file:
+    json.dump(payload, file, ensure_ascii=False, indent=2)
 
 print(f"Guardado en: {json_path.name}")
 
+# %%
 # Leer directamente desde archivo
 with json_path.open("r", encoding="utf-8") as f:
     loaded = json.load(f)
@@ -236,7 +248,7 @@ print("Mejor práctica: usa dump/load para archivos")
 with json_path.open("w", encoding="utf-8") as f:
     json.dump(payload, f, indent=2)
 
-print("✓ Más eficiente que: json_string = json.dumps(...)")
+print(" Más eficiente que: json_string = json.dumps(...)")
 print("                    path.write_text(json_string)")
 
 # %% [markdown]
@@ -268,6 +280,7 @@ else:
 import time
 from datetime import datetime
 
+
 def expensive_computation(data: list) -> dict:
     """Simulación de cálculo costoso (ej: ML prediction)."""
     time.sleep(0.1)  # Simula trabajo pesado
@@ -275,6 +288,7 @@ def expensive_computation(data: list) -> dict:
         "result": sum(int(row.get("stock", 0)) for row in data),
         "computed_at": datetime.now().isoformat(),
     }
+
 
 # Sin cache: recalcula cada vez (lento)
 result1 = expensive_computation(rows)

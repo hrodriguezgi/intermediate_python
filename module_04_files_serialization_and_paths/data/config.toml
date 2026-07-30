@@ -1,0 +1,18 @@
+
+# Configuración de la aplicación
+
+[database]
+host = "localhost"
+port = 5432
+user = "admin"
+password = "secret123"  # NUNCA dejes passwords en repo
+debug = true
+
+[cache]
+ttl = 3600  # 1 hora en segundos
+enabled = true
+backends = ["redis", "memcached"]
+
+[logging]
+level = "INFO"
+file = "/var/log/app.log"

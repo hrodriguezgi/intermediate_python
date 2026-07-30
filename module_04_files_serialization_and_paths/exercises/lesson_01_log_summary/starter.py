@@ -14,7 +14,16 @@ def summarize_log(path: Path) -> dict:
     Hint: Usa read_text() para leer el archivo con encoding="utf-8"
     """
     # TODO: Implementa la función
-    pass
+    diccionario = {"INFO": 0, "WARNING": 0, "ERROR": 0}
+    contenido = path.read_text(encoding="utf-8")
+
+    for linea in contenido.splitlines():
+        for nivel in diccionario.keys():
+            if linea.startswith(nivel):
+                diccionario[nivel] += 1
+                break
+
+    return diccionario
 
 
 if __name__ == "__main__":
