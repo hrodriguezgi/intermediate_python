@@ -38,7 +38,7 @@ if __name__ == "__main__":
     print(f"  Frequencies: {result['frequencies']}")
 
     # Verificaciones
-    assert result['total_unique'] == 3, "Should have 3 unique tags"
-    assert result['unique_tags'] == ["data", "files", "python"], "Should be sorted"
-    assert result['frequencies']['python'] == 3, "Python appears 3 times"
-    print("✓ All assertions passed!")
+    assert result["total_unique"] == 3, "Should have 3 unique tags"
+    assert result["unique_tags"] == ["data", "files", "python"], "Should be sorted"
+    assert result["frequencies"]["python"] == 3, "Python appears 3 times"
+    print(" All assertions passed!")

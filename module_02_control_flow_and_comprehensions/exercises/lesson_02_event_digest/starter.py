@@ -16,7 +16,12 @@ def build_event_digest_generator(events_iter) -> dict:
     # TODO: Implement using generator expressions instead of list comprehensions
     # Process events without loading everything in memory
     # Return the same structure as build_event_digest
-    pass
+    ok_events = [event for event in events_iter if event["status"] == "ok"]
+    return {
+        "ok_count": len(ok_events),
+        "users": sorted({event["user"] for event in ok_events}),
+        "total_duration": sum(event["duration"] for event in ok_events),
+    }
 
 
 def build_event_digest_from_lines(lines: list[str]) -> dict:
@@ -26,7 +31,12 @@ def build_event_digest_from_lines(lines: list[str]) -> dict:
     # - Validate using walrus operator (line := ...)
     # - Handle parsing errors gracefully
     # Return dict with same structure + 'invalid' field for error indices
-    pass
+    for line in lines:
+        try:
+            line_dict = json.loads(line)
+            print(line_dict)
+        except:
+            print("linea no fue posible convertirla:", line)
 
 
 if __name__ == "__main__":
@@ -44,7 +54,7 @@ if __name__ == "__main__":
     print("Part 2 - Generator-based digest:")
     # Simulating a large dataset with an iterator
     events_iter = iter(sample)
-    print(build_event_digest_generator(events_iter))
+    print(build_event_digest_generator(sample))
     print()
 
     # Part 3: Parse from JSON lines
@@ -52,7 +62,7 @@ if __name__ == "__main__":
     log_lines = [
         '{"user": "ana", "duration": 30, "status": "ok"}',
         '{"user": "luis", "duration": 12, "status": "retry"}',
-        'INVALID_JSON',
+        "INVALID_JSON",
         '{"user": "marta", "duration": 48, "status": "ok"}',
     ]
     print(build_event_digest_from_lines(log_lines))

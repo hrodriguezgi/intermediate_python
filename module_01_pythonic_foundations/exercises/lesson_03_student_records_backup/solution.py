@@ -16,16 +16,8 @@ def create_student_backup(students: list[dict]) -> list[dict]:
 
 if __name__ == "__main__":
     students = [
-        {
-            "id": 1,
-            "name": "Ana",
-            "metadata": {"track": "backend", "years": 2}
-        },
-        {
-            "id": 2,
-            "name": "Luis",
-            "metadata": {"track": "data", "years": 4}
-        },
+        {"id": 1, "name": "Ana", "metadata": {"track": "backend", "years": 2}},
+        {"id": 2, "name": "Luis", "metadata": {"track": "data", "years": 4}},
     ]
 
     backup = create_student_backup(students)
@@ -42,4 +34,4 @@ if __name__ == "__main__":
     # Más verificaciones
     assert students[0]["name"] == "Ana", "Original name should not change"
     assert students[0]["metadata"]["years"] == 2, "Original metadata should not change"
-    print("✓ All assertions passed!")
+    print(" All assertions passed!")

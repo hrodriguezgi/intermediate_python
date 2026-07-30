@@ -22,10 +22,10 @@ Este módulo refuerza la forma idiomática de trabajar con variables, coleccione
 
 | Tema | Lección | Ejercicio |
 |------|---------|-----------|
-| Desempaque y asignación múltiple | 01 | ✅ Lesson 01 |
-| Mutabilidad e inmutabilidad | 01 | ✅ Lesson 03 |
-| Copias (shallow vs deep) | 01 | ✅ Lesson 03 |
-| `enumerate` y `zip` | 01 | ✅ Lesson 05 |
-| Strings: `split()`, `join()`, `lower()` | 02 | ✅ Lesson 04 |
-| `Counter` para frecuencias | 02 | ✅ Lesson 04 |
-| Fechas y `datetime` | 02 | ✅ Lesson 02 |
+| Desempaque y asignación múltiple | 01 |  Lesson 01 |
+| Mutabilidad e inmutabilidad | 01 |  Lesson 03 |
+| Copias (shallow vs deep) | 01 |  Lesson 03 |
+| `enumerate` y `zip` | 01 |  Lesson 05 |
+| Strings: `split()`, `join()`, `lower()` | 02 |  Lesson 04 |
+| `Counter` para frecuencias | 02 |  Lesson 04 |
+| Fechas y `datetime` | 02 |  Lesson 02 |

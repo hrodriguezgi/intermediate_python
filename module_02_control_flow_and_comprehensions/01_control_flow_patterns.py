@@ -103,7 +103,7 @@ def process_event(event: dict) -> str:
         case {"type": "refund", "amount": int(amt) | float(amt)}:
             return f"Processing refund: ${amt}"
         case {"type": "transfer", "from_account": from_acc, "to_account": to_acc}:
-            return f"Processing transfer: {from_acc} → {to_acc}"
+            return f"Processing transfer: {from_acc} -> {to_acc}"
         case {"type": t}:
             return f"Unknown event type: {t}"
         case _:
@@ -124,6 +124,7 @@ for event in events_queue:
 # Real scenario: Leer datos línea por línea hasta encontrar EOF o error
 import io
 
+
 def process_log_lines(log_content: str) -> int:
     lines = iter(log_content.split("\n"))
     processed = 0
@@ -138,7 +139,7 @@ def process_log_lines(log_content: str) -> int:
     #         processed += 1
 
     # Con walrus (elegante y claro)
-    while (line := next(lines, None)):
+    while line := next(lines, None):
         if line.startswith("ERROR"):
             print(f"Error line: {line}")
             processed += 1
@@ -169,7 +170,7 @@ def validate_and_process(row: dict) -> tuple[bool, str]:
         return False, "Missing age field"
     if not isinstance(age, int) or age < 0:
         return False, f"Invalid age: {age}"
-    if (name := row.get("name", "").strip()):
+    if name := row.get("name", "").strip():
         return True, f"Valid: {name} ({age} years old)"
     return False, "Missing or empty name"
 

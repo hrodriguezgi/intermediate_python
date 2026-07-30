@@ -1,3 +1,12 @@
+"""
+sample = [
+        {"id": 1, "total": 150, "status": "paid"},
+        {"id": 2, "total": 35, "status": "paid"},
+        {"id": 3, "total": 8, "status": "paid"},
+        {"id": 4, "total": 20, "status": "pending"},
+    ]
+"""
+
 def triage_orders(orders: list[dict]) -> dict:
     """Part 1: Basic classification with guard clauses."""
     summary = {"priority": [], "standard": [], "low_value": [], "blocked": []}

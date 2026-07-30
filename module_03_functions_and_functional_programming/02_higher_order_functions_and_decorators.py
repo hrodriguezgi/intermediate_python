@@ -22,7 +22,7 @@ numbers = [5, 12, 18, 21]
 import timeit
 
 # Comprensión de lista: carga todo en memoria
-comprehension_result = [x * x for x in range(100000)]
+comprehension_result = [x * x for x in range(10)]
 print(f"Comprensión: {len(comprehension_result)} valores en memoria")
 
 # Expresión generadora: evaluación perezosa
@@ -130,21 +130,28 @@ def create_data_processor(transformation_rules: dict):
     return process
 
 
+# %%
+
 # Caso 1: Procesar datos de usuarios
 # Nota: lambda permite combinar múltiples transformaciones
-user_processor = create_data_processor({
-    "email": lambda x: str.strip(x).lower(),  # Limpiar y minúsculas
-    "name": str.strip,  # Quitar espacios en blanco
-    "age": int,  # Convertir a entero
-})
+user_processor = create_data_processor(
+    {
+        "email": lambda x: str.strip(x).lower(),  # Limpiar y minúsculas
+        "name": str.strip,  # Quitar espacios en blanco
+        "age": int,  # Convertir a entero
+    }
+)
 
 # Caso 2: Procesar datos de transacciones
-transaction_processor = create_data_processor({
-    "amount": float,  # Convertir a número
-    "reference": lambda x: str.strip(x).upper(),  # Limpiar y mayúsculas
-    "date": str.strip,  # Limpiar espacios
-})
+transaction_processor = create_data_processor(
+    {
+        "amount": float,  # Convertir a número
+        "reference": lambda x: str.strip(x).upper(),  # Limpiar y mayúsculas
+        "date": str.strip,  # Limpiar espacios
+    }
+)
 
+# %%
 # Uso: diferentes fuentes, mismo patrón
 
 user_raw = {"email": "  USER@EXAMPLE.COM  ", "name": "  alice  ", "age": "30"}
@@ -196,6 +203,7 @@ for user in users_cleaned:
 # Ejemplo básico: @traced
 def traced(function):
     """Decorador que imprime entrada y salida de función."""
+
     @wraps(function)
     def wrapper(*args, **kwargs):
         print(f"calling {function.__name__} with args={args}, kwargs={kwargs}")
@@ -212,7 +220,8 @@ def compute_discount(total: float, rate: float) -> float:
     return round(total * (1 - rate), 2)
 
 
-compute_discount(250, 0.15)
+total = compute_discount(250, 0.15)
+print(total)
 
 # %% [markdown]
 # ## Cuándo usar decoradores
@@ -246,6 +255,7 @@ import time
 
 def timing(function):
     """Mide y reporta tiempo de ejecución."""
+
     @wraps(function)
     def wrapper(*args, **kwargs):
         start = time.perf_counter()
@@ -291,6 +301,7 @@ transformed = transform_data(data)
 # %%
 def log_calls(function):
     """Registra argumentos de entrada y resultado de salida."""
+
     @wraps(function)
     def wrapper(*args, **kwargs):
         args_str = ", ".join(repr(a) for a in args)
@@ -325,14 +336,15 @@ validate_record({"id": 2, "name": "Bob", "email": "bob@example.com"}, strict=Tru
 # Combina timing + logging + manejo de errores.
 #
 # **Objetivo:** Visibilidad completa de qué pasa en cada paso del pipeline:
-# - ✓ Cuánto tardó
-# - ✓ Cuántos registros procesó
-# - ✗ Si falló, cuándo y por qué
+# -  Cuánto tardó
+# -  Cuántos registros procesó
+# -  Si falló, cuándo y por qué
 
 
 # %%
 def monitoring(function):
     """Decora con timing, logging de éxito/fallo, y conteo de items."""
+
     @wraps(function)
     def wrapper(*args, **kwargs):
         start = time.perf_counter()
@@ -340,11 +352,11 @@ def monitoring(function):
             result = function(*args, **kwargs)
             elapsed = time.perf_counter() - start
             item_count = len(result) if isinstance(result, (list, dict)) else "?"
-            print(f"✓ {function.__name__} completado en {elapsed:.4f}s ({item_count} items)")
+            print(f" {function.__name__} completado en {elapsed:.4f}s ({item_count} items)")
             return result
         except Exception as e:
             elapsed = time.perf_counter() - start
-            print(f"✗ {function.__name__} falló en {elapsed:.4f}s: {e}")
+            print(f" {function.__name__} falló en {elapsed:.4f}s: {e}")
             raise
 
     return wrapper
@@ -381,7 +393,7 @@ from functools import partial, reduce
 
 
 # Función flexible que normaliza scores
-def normalize_score(score: int | float, max_score: int = 100) -> float:
+def normalize_score(score: int | float, max_score: int) -> float:
     return round(score / max_score, 2)
 
 

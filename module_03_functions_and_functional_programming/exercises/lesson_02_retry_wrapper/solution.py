@@ -62,4 +62,4 @@ if __name__ == "__main__":
     try:
         always_fails()
     except RuntimeError as e:
-        print(f"✗ Fallido después de todos los intentos: {e}")
+        print(f" Fallido después de todos los intentos: {e}")
