@@ -1,13 +1,78 @@
-# Module 6 · Packages and SQLite
+# Module 6 · Databases (SQLite & DuckDB with SQLAlchemy)
 
-Este módulo cierra el curso con estructura de proyecto y persistencia local.
+Manejo de datos persistentes con bases de datos reales en Python.
 
 ## Lecciones
 
-- `01_packages_imports_and_cli.py`
-- `02_sqlite_for_python_projects.py`
+### 01. SQLAlchemy Fundamentals
+**Temas:** ORM basics, modelos, sesiones, queries en Python
+- ¿Por qué SQLAlchemy?
+- Definir modelos con ORM
+- Crear, leer, actualizar datos
+- Context managers para sesiones
+
+**Aprendes:** Abstracción SQL con Python objects
+
+### 02. SQLite con SQLAlchemy  
+**Temas:** Transacciones, ACID, seguridad, error handling
+- Cuándo usar SQLite vs otras bases de datos
+- Transacciones (todo o nada)
+- Prevención de SQL injection
+- Manejo de errores (IntegrityError, OperationalError)
+- Caso real: transferencias de dinero, órdenes atómicas
+
+**Aprendes:** Datos consistentes, operaciones seguras
+
+### 03. DuckDB para Analytics
+**Temas:** Analytics en memoria, queries rápidas, performance
+- SQLite vs DuckDB: trade-offs
+- Cargar CSV sin intermediarios
+- Queries analíticas (GROUP BY, JOIN, agregaciones)
+- Comparación de performance
+- Cuándo usar cada tecnología
+
+**Aprendes:** Análisis rápido de datos, elección de herramienta correcta
 
 ## Ejercicios
 
-- `exercises/lesson_01_course_package/`
-- `exercises/lesson_02_library_queries/`
+- `exercises/lesson_01_course_package/` - Estructura de paquetes
+- `exercises/lesson_02_library_queries/` - Queries a SQLite
+
+## Proyecto Final
+
+Ver `final_project/` en la raíz del curso:
+- Cargar CSV → Validar → SQLite → DuckDB → FastAPI
+- Aplicar todo el módulo en contexto real
+
+## Ejecutar
+
+```bash
+# Lesson 1: SQLAlchemy basics
+python -m module_06_packages_and_sqlite.01_sqlalchemy_fundamentals
+
+# Lesson 2: SQLite transactions
+python -m module_06_packages_and_sqlite.02_sqlite_with_sqlalchemy
+
+# Lesson 3: DuckDB analytics
+python -m module_06_packages_and_sqlite.03_duckdb_for_analytics
+```
+
+## Concepto Clave
+
+**Seguridad + Performance + Persistencia**
+
+- ORM previene SQL injection automáticamente
+- Transacciones garantizan consistencia
+- DuckDB es 10-100x más rápido que SQLite para analytics
+- Elegir la herramienta correcta importa
+
+## Requisitos
+
+```
+sqlalchemy>=2.0
+duckdb>=0.8
+```
+
+## Siguiente
+
+→ Module 07: FastAPI (Exponer datos vía API)
